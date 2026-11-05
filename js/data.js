@@ -9,3 +9,15 @@ async function loadJson(path) {
 export function loadGreetings() {
   return loadJson('data/greetings.json');
 }
+
+export function loadVerbs() {
+  return loadJson('data/verbs.json');
+}
+
+export function loadAbbreviations() {
+  return loadJson('data/abbreviations.json');
+}
+
+export function loadCurriculum() {
+  return loadJson('data/curriculum.json');
+}

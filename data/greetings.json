@@ -1,12 +1,27 @@
 [
   { "text": "Hello! Ready to learn some English today? 🌟" },
   { "text": "Every word you learn makes English easier 💪" },
+  { "text": "Small steps every day. You've got this 🌱" },
+  { "text": "English is easier than it looks. Let's go! 🚀" },
+  { "text": "A few minutes today, better English tomorrow ⏱️" },
+  { "text": "Your future self says thanks for practicing 💌" },
   { "text": "Good morning! A few new words with your breakfast? ☀️", "time": "morning" },
+  { "text": "Fresh morning, fresh brain. Perfect time to learn 🧠", "time": "morning" },
   { "text": "Good afternoon! Time for a little English break 🍵", "time": "afternoon" },
+  { "text": "Need a break? Learn something new 📚", "time": "afternoon" },
   { "text": "Good evening! One small lesson before the day ends 🌙", "time": "evening" },
+  { "text": "Wind down with a little English tonight ✨", "time": "evening" },
   { "text": "You're on a roll! Keep your streak going 🔥", "minStreak": 3 },
+  { "text": "A whole week or more in a row! You're unstoppable 🏆", "minStreak": 7 },
   { "text": "Almost there! Graduation is just around the corner 🎓", "nearGraduation": true },
+  { "text": "Nearly at the finish line. Keep going! 🏁", "nearGraduation": true },
   { "text": "Hi {{name}}! Ready to learn something new? 🌱" },
+  { "text": "{{name}}, your English is growing every day 🌿" },
+  { "text": "Welcome back, {{fullName}}! Let's pick up where you left off 📖" },
+  { "text": "{{nickname1}}, let's learn something fun today ✨" },
   { "text": "Good morning, {{nickname1}} 👋 Ready for some new English?", "time": "morning" },
-  { "text": "{{nickname2}} is back! Let's make English easy today 💪" }
+  { "text": "Good evening, {{nickname1}} 🌙 One small lesson before bed?", "time": "evening" },
+  { "text": "{{nickname2}} is back! Let's make English easy today 💪" },
+  { "text": "{{nickname2}} knows more English every day 😄" },
+  { "text": "{{name}}, one more lesson and you'll be even better 🌟", "minStreak": 3 }
 ]
