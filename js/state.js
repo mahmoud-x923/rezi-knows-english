@@ -109,6 +109,10 @@ export function getStreak() {
   return gap === 0 || gap === 1 ? count : 0;
 }
 
+export function getCompletedDayCount() {
+  return Object.keys(read().completedDays).length;
+}
+
 export function getTotalStars() {
   return Object.values(read().completedDays).reduce((sum, { stars }) => sum + stars, 0);
 }

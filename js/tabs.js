@@ -1,0 +1,189 @@
+// The home page tabs: How It Works, My Journey and Practice Arena.
+
+import {
+  canStartLesson,
+  getCompletedDayCount,
+  getDayStatus,
+  getProgress,
+  getStreak,
+  getTotalStars,
+  hasGraduated,
+  isBonusAvailable,
+  TOTAL_DAYS,
+} from './state.js';
+
+const ITEMS_PER_DAY = 5;
+
+const STEPS = [
+  { text: 'Learn 5 new things every day: 3 verbs and 2 abbreviations.', fa: 'هر روز ۵ چیز جدید یاد بگیر: ۳ فعل و ۲ مخفف.' },
+  { text: 'Play the quiz at the end of each lesson.', fa: 'در پایان هر درس، آزمون را انجام بده.' },
+  { text: 'Earn up to 3 stars for each quiz.', fa: 'در هر آزمون تا ۳ ستاره بگیر.' },
+  { text: 'Come back every day to keep your streak.', fa: 'هر روز برگرد تا زنجیره‌ات قطع نشود.' },
+];
+
+const PRACTICE_MODES = [
+  { href: '#/practice/mixed', label: 'Mixed' },
+  { href: '#/practice/weak', label: 'Weak spots' },
+  { href: '#/practice/match', label: 'Match pairs' },
+];
+
+const TABS = [
+  { id: 'how', label: '🌱 How It Works', render: renderHowItWorks },
+  { id: 'journey', label: '🗺️ My Journey', render: renderJourney },
+  { id: 'practice', label: '🎯 Practice Arena', render: renderPractice },
+];
+
+let selectedId = TABS[0].id;
+
+function element(tag, text) {
+  const node = document.createElement(tag);
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+function link(href, text) {
+  const node = element('a', text);
+  node.href = href;
+  return node;
+}
+
+function persian(tag, text) {
+  const node = element(tag, text);
+  node.lang = 'fa';
+  node.dir = 'rtl';
+  return node;
+}
+
+function renderHowItWorks() {
+  const steps = element('ol');
+  steps.className = 'steps';
+  steps.append(...STEPS.map(({ text, fa }) => {
+    const item = element('li');
+    item.append(element('p', text), persian('p', fa));
+    return item;
+  }));
+
+  return [
+    steps,
+    element('p', 'One new lesson unlocks each day. After you finish it, you can take one bonus lesson the same day.'),
+    persian('p', 'هر روز یک درس جدید باز می‌شود. بعد از تمام کردن آن، می‌توانی همان روز یک درس جایزه هم بخوانی.'),
+  ];
+}
+
+function renderSummary() {
+  const rows = [
+    ['🔥 Streak', getStreak()],
+    ['📚 Words learned', getCompletedDayCount() * ITEMS_PER_DAY],
+    ['⭐ Total stars', getTotalStars()],
+  ];
+  const summary = element('dl');
+  summary.className = 'summary';
+  summary.append(...rows.flatMap(([term, value]) => [element('dt', term), element('dd', value)]));
+  return summary;
+}
+
+function renderNextStep() {
+  if (hasGraduated()) return link('#/graduation', 'Graduation 🎓');
+  if (isBonusAvailable()) return link('#/lesson', 'Bonus lesson 🚀');
+  if (canStartLesson()) return link('#/lesson', "Start today's lesson");
+  return element('p', "You've finished today's lessons. See you tomorrow 👋");
+}
+
+function renderStop(day, completedDays) {
+  const status = getDayStatus(day);
+  if (status === 'completed') {
+    return link(`#/lesson/${day}`, `✅ Day ${day} ${'⭐'.repeat(completedDays[day].stars)}`);
+  }
+  if (status === 'today') return link('#/lesson', `⭐ Day ${day}: today`);
+  return element('span', `🔒 Day ${day}`);
+}
+
+function renderJourney() {
+  const { completedDays } = getProgress();
+  const path = element('ol');
+  path.className = 'journey';
+  for (let day = 1; day <= TOTAL_DAYS; day++) {
+    const stop = element('li');
+    stop.append(renderStop(day, completedDays));
+    path.append(stop);
+  }
+  return [renderSummary(), renderNextStep(), path];
+}
+
+function renderPractice() {
+  const isUnlocked = getCompletedDayCount() > 0;
+  const modes = element('ul');
+  modes.append(...PRACTICE_MODES.map(({ href, label }) => {
+    const item = element('li');
+    if (isUnlocked) {
+      item.append(link(href, label));
+    } else {
+      const button = element('button', label);
+      button.type = 'button';
+      button.disabled = true;
+      item.append(button);
+    }
+    return item;
+  }));
+
+  return isUnlocked
+    ? [element('p', 'Practice everything you have learned so far.'), modes]
+    : [element('p', 'Finish Day 1 and your practice games will open here 🎯'), modes];
+}
+
+export function createTabs() {
+  const container = element('section');
+
+  const list = element('div');
+  list.className = 'tab-list';
+  list.setAttribute('role', 'tablist');
+  list.setAttribute('aria-label', 'Home sections');
+
+  const panel = element('div');
+  panel.id = 'tab-panel';
+  panel.className = 'tab-panel';
+  panel.tabIndex = 0;
+  panel.setAttribute('role', 'tabpanel');
+
+  const buttons = TABS.map(({ id, label }) => {
+    const button = element('button', label);
+    button.type = 'button';
+    button.id = `tab-${id}`;
+    button.className = 'tab';
+    button.setAttribute('role', 'tab');
+    button.setAttribute('aria-controls', panel.id);
+    button.addEventListener('click', () => select(id));
+    return button;
+  });
+
+  function select(id) {
+    selectedId = id;
+    TABS.forEach((tab, index) => {
+      const isSelected = tab.id === id;
+      buttons[index].setAttribute('aria-selected', String(isSelected));
+      buttons[index].tabIndex = isSelected ? 0 : -1;
+    });
+    panel.setAttribute('aria-labelledby', `tab-${id}`);
+    panel.replaceChildren(...TABS.find((tab) => tab.id === id).render());
+  }
+
+  list.addEventListener('keydown', (event) => {
+    const current = TABS.findIndex((tab) => tab.id === selectedId);
+    const targets = {
+      ArrowRight: (current + 1) % TABS.length,
+      ArrowLeft: (current - 1 + TABS.length) % TABS.length,
+      Home: 0,
+      End: TABS.length - 1,
+    };
+    if (!(event.key in targets)) return;
+    event.preventDefault();
+    const target = targets[event.key];
+    select(TABS[target].id);
+    buttons[target].focus();
+  });
+
+  list.append(...buttons);
+  container.append(list, panel);
+  select(selectedId);
+  return container;
+}

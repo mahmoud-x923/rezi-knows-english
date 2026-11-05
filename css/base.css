@@ -53,6 +53,63 @@ input {
   padding: 0.5rem 0.75rem;
 }
 
+[lang="fa"],
+[lang="ar"] {
+  font-family: Vazirmatn, system-ui, sans-serif;
+}
+
+.tab-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.25rem;
+}
+
+.tab {
+  padding: 0.5rem 0.25rem;
+  overflow-wrap: anywhere;
+}
+
+.tab[aria-selected="true"] {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.tab-panel {
+  padding: 1rem 0;
+}
+
+.steps,
+.journey {
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.steps li {
+  margin-bottom: 1rem;
+}
+
+.steps p {
+  margin: 0;
+}
+
+.journey li {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 1rem;
+  margin: 0 0 1rem;
+}
+
+.summary dd {
+  margin: 0;
+}
+
 .debug-panel {
   border-top: 1px solid currentColor;
 }

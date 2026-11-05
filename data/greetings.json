@@ -1,0 +1,12 @@
+[
+  { "text": "Hello! Ready to learn some English today? 🌟" },
+  { "text": "Every word you learn makes English easier 💪" },
+  { "text": "Good morning! A few new words with your breakfast? ☀️", "time": "morning" },
+  { "text": "Good afternoon! Time for a little English break 🍵", "time": "afternoon" },
+  { "text": "Good evening! One small lesson before the day ends 🌙", "time": "evening" },
+  { "text": "You're on a roll! Keep your streak going 🔥", "minStreak": 3 },
+  { "text": "Almost there! Graduation is just around the corner 🎓", "nearGraduation": true },
+  { "text": "Hi {{name}}! Ready to learn something new? 🌱" },
+  { "text": "Good morning, {{nickname1}} 👋 Ready for some new English?", "time": "morning" },
+  { "text": "{{nickname2}} is back! Let's make English easy today 💪" }
+]

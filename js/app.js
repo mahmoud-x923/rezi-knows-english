@@ -1,6 +1,8 @@
-// Entry point and hash router. Pages are placeholders until their milestones.
+// Entry point and hash router. Other pages are placeholders until their milestones.
 
 import { initDebugPanel } from './debug.js';
+import { createHero } from './hero.js';
+import { createTabs } from './tabs.js';
 
 const APP_NAME = 'Rezi Knows English';
 const HOME = '#/';
@@ -11,7 +13,7 @@ const app = document.querySelector('#app');
 const DAY = '([1-9]|[12][0-9]|30)';
 
 const routes = [
-  { pattern: /^\/$/, title: () => 'Home' },
+  { pattern: /^\/$/, title: () => APP_NAME, render: renderHome },
   { pattern: /^\/lesson$/, title: () => "Today's lesson" },
   { pattern: new RegExp(`^/lesson/${DAY}$`), title: (day) => `Review Day ${day}` },
   { pattern: new RegExp(`^/quiz/${DAY}$`), title: (day) => `Quiz for Day ${day}` },
@@ -19,20 +21,8 @@ const routes = [
   { pattern: /^\/graduation$/, title: () => 'Graduation' },
 ];
 
-const homeLinks = [
-  ['#/lesson', "Today's lesson"],
-  ['#/practice/mixed', 'Practice: mixed'],
-  ['#/practice/weak', 'Practice: weak spots'],
-  ['#/practice/match', 'Practice: match pairs'],
-  ['#/graduation', 'Graduation'],
-];
-
-function link(href, label) {
-  const element = document.createElement('a');
-  element.href = href;
-  element.textContent = label;
-  return element;
-}
+// Identifies the latest render, so a slower earlier one can't overwrite it.
+let latestRender = 0;
 
 function currentPath() {
   const path = location.hash.slice(1).replace(/(.)\/+$/, '$1');
@@ -47,35 +37,34 @@ function matchRoute(path) {
   return null;
 }
 
-function renderPlaceholder(title, isHome) {
-  const heading = document.createElement('h1');
-  heading.textContent = isHome ? APP_NAME : title;
-
-  if (isHome) {
-    const list = document.createElement('ul');
-    list.append(...homeLinks.map(([href, label]) => {
-      const item = document.createElement('li');
-      item.append(link(href, label));
-      return item;
-    }));
-    app.replaceChildren(heading, list);
-  } else {
-    app.replaceChildren(heading, link(HOME, 'Back to home'));
-  }
+async function renderHome() {
+  return [await createHero(), createTabs()];
 }
 
-function render() {
-  const path = currentPath();
-  const matched = matchRoute(path);
+function renderPlaceholder(title) {
+  const heading = document.createElement('h1');
+  heading.textContent = title;
+  const back = document.createElement('a');
+  back.href = HOME;
+  back.textContent = 'Back to home';
+  return [heading, back];
+}
+
+async function render() {
+  const renderId = ++latestRender;
+  const matched = matchRoute(currentPath());
   if (!matched) {
     location.replace(HOME);
     return;
   }
 
-  const title = matched.route.title(...matched.params);
-  const isHome = path === '/';
-  renderPlaceholder(title, isHome);
-  document.title = isHome ? APP_NAME : `${title} · ${APP_NAME}`;
+  const { route, params } = matched;
+  const title = route.title(...params);
+  const nodes = route.render ? await route.render() : renderPlaceholder(title);
+  if (renderId !== latestRender) return;
+
+  app.replaceChildren(...nodes);
+  document.title = title === APP_NAME ? APP_NAME : `${title} · ${APP_NAME}`;
 }
 
 window.addEventListener('hashchange', () => {
