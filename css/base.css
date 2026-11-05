@@ -1,0 +1,90 @@
+/* Minimal mobile-first layout. Visual design comes in iteration 2. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+main,
+.debug-panel {
+  width: 100%;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+main:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 2px;
+}
+
+a,
+button,
+input {
+  min-height: 44px;
+  font: inherit;
+}
+
+a {
+  display: inline-flex;
+  align-items: center;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+button,
+input {
+  padding: 0.5rem 0.75rem;
+}
+
+.debug-panel {
+  border-top: 1px solid currentColor;
+}
+
+.debug-panel h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.debug-panel dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 1rem;
+  margin: 0 0 1rem;
+}
+
+.debug-panel dd {
+  margin: 0;
+}
+
+.debug-panel label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.debug-panel input {
+  display: block;
+  width: 100%;
+}
+
+.debug-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
