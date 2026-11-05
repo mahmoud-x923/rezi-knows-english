@@ -6,7 +6,7 @@
 
 ## 1. Overview
 
-A mobile-first static website, hosted on **GitHub Pages**, built as a belated birthday gift for **{{name}}** ({{fullName}}), a native Persian speaker.
+A mobile-first static website, hosted on **GitHub Pages**, built for **{{name}}** ({{fullName}}), a native Persian speaker.
 
 It teaches two things over a **30-day journey**:
 1. **English irregular verbs**: base form, past simple, past participle (3 per day, 90 total)
@@ -14,12 +14,10 @@ It teaches two things over a **30-day journey**:
 
 Every item shows its meaning in **Persian (فارسی)** and **Arabic (العربية)**.
 
-### Personal details (used in greetings and the gift screen)
+### Personal details (used in greetings)
 The real values live in `PERSONAL.local.md`, which is gitignored and stored only locally. Never copy them into a tracked file.
 - Name: **{{name}}** / **{{fullName}}**
 - Nicknames: **{{nickname1}}**, **{{nickname2}}**
-- Born: **{{birthDate}} = {{birthDateHijri}}**
-- Place and time: **{{birthPlace}}, {{birthTime}}**
 
 ---
 
@@ -37,11 +35,8 @@ The real values live in `PERSONAL.local.md`, which is gitignored and stored only
 
 ## 3. Structure
 
-### First visit: gift opening (shown once)
-A "Happy belated birthday, {{fullName}} 🎁" screen with her birth details ({{birthDateHijri}} · {{birthPlace}} · {{birthTime}}) and a **"Start my journey"** button. After she taps it, `giftOpened` is saved and the screen is never shown again.
-
 ### Home page
-1. **Hero**: a cheerful greeting picked at random on every page load (see §6, Greetings). On **{{birthdayMonthDay}}** each year a special birthday greeting replaces the random one.
+1. **Hero**: a cheerful greeting picked at random on every page load (see §6, Greetings).
 2. **Three tabs**:
 
 | Tab | Content |
@@ -56,7 +51,7 @@ A small ⚙️ **Settings** menu offers: reset progress, export progress (downlo
 
 | Route | Page |
 |---|---|
-| `#/` | Home: hero + tabs (or the gift screen on first visit) |
+| `#/` | Home: hero + tabs |
 | `#/lesson` | Today's lesson (the next unlocked day) |
 | `#/lesson/:day` | Review a completed day (no unlocking effects) |
 | `#/quiz/:day` | End-of-lesson quiz for that day |
@@ -178,13 +173,11 @@ Each quiz mixes these question types at random:
 Kept separate from the content so the order can change without editing the items. Each verb and each abbreviation appears in exactly one day.
 
 ### Greetings: about 25
-`data/greetings.json`. Short, cheerful messages using {{name}}, {{fullName}}, {{nickname1}}, {{nickname2}} and her birth details. For example:
+`data/greetings.json`. Short, cheerful messages using {{name}}, {{fullName}}, {{nickname1}} and {{nickname2}}. For example:
 - "Good morning, {{nickname1}} 👋 Ready for today's 5 new words?"
 - "{{nickname2}} is back! Let's make English easy today 💪"
-- "Born at {{birthTime}} in {{birthPlace}}, so early mornings are your superpower ☀️"
-- "{{birthDateHijri}} gave the world a future English pro ✨"
 
-Each greeting can have optional conditions: `time` (morning / afternoon / evening), `minStreak`, `nearGraduation`. Only greetings whose conditions match are picked. Plus one dedicated birthday greeting for {{birthdayMonthDay}}.
+Each greeting can have optional conditions: `time` (morning / afternoon / evening), `minStreak`, `nearGraduation`. Only greetings whose conditions match are picked.
 
 ### Translation review
 A native Persian speaker must proofread all Persian text before launch. Slang translations are where mistakes are most likely. Arabic is reviewed by the project owner.
@@ -193,7 +186,7 @@ A native Persian speaker must proofread all Persian text before launch. Slang tr
 
 ## 7. Unlocking rules (hybrid)
 
-- **Day 1** is available immediately after the gift screen.
+- **Day 1** is available immediately.
 - Each calendar day, **one regular lesson** unlocks: the next uncompleted day.
 - After completing it, **one bonus lesson** is available that same calendar day. Max **2 lessons per calendar day**.
 - Missed days don't pile up. She continues from where she left off.
@@ -212,7 +205,6 @@ Adding `?debug` to the URL shows a small panel to **override today's date** and 
 Key: `rezi-knows-english:v1`
 ```json
 {
-  "giftOpened": true,
   "completedDays": { "1": { "stars": 3, "completedAt": "2026-11-05" } },
   "lessonsByDate": { "2026-11-05": [1, 2] },
   "streak": { "count": 1, "lastDate": "2026-11-05" },
@@ -241,7 +233,6 @@ Key: `rezi-knows-english:v1`
 │   ├── state.js           # localStorage progress, unlocking, streak
 │   ├── date.js            # local date helper (+ debug override)
 │   ├── data.js            # loads JSON content
-│   ├── gift.js            # first-visit gift screen
 │   ├── hero.js            # greeting picker
 │   ├── tabs.js            # How It Works / My Journey / Practice Arena
 │   ├── lesson.js          # lesson cards flow
@@ -276,7 +267,7 @@ All paths are **relative** so the site works under a GitHub Pages sub-path (`use
 ## 11. Milestones (iteration 1)
 
 1. Project skeleton, hash router, date helper, localStorage state module (unlocking + streak logic), debug panel
-2. Gift screen, hero with greeting picker, three tabs
+2. Hero with greeting picker, three tabs
 3. Content: 90 verbs, 60 abbreviations, 30-day curriculum, ~25 greetings (in batches)
 4. Daily lesson page with verb and abbreviation cards + text-to-speech
 5. Quiz engine with all question types, result screen, stars, bonus lesson, graduation
@@ -284,4 +275,4 @@ All paths are **relative** so the site works under a GitHub Pages sub-path (`use
 7. Settings (reset / export / import), PWA manifest, icons, service worker
 8. Testing on a real phone + GitHub Pages deployment steps in a README
 
-**Iteration 2 (later):** theme, colors, illustrations, animations, sound effects, confetti, polish.
+**Iteration 2 (later):** theme, colors, illustrations, animations, sound effects, polish.
