@@ -168,13 +168,13 @@ function renderNoLesson() {
   return [element('h1', "Today's lesson"), message, next];
 }
 
-function renderLoadError(title) {
+export function renderLoadError(title) {
   const retry = element('button', 'Try again');
   retry.type = 'button';
   retry.addEventListener('click', () => location.reload());
   return [
     element('h1', title),
-    element('p', "This lesson couldn't load. Check your connection and try again."),
+    element('p', "This page couldn't load. Check your connection and try again."),
     retry,
     element('br'),
     link(HOME, 'Back to home'),

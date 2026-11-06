@@ -1,8 +1,10 @@
 // Entry point and hash router. Other pages are placeholders until their milestones.
 
 import { initDebugPanel } from './debug.js';
+import { renderGraduation } from './graduation.js';
 import { createHero } from './hero.js';
 import { renderLesson } from './lesson.js';
+import { renderQuiz } from './quiz.js';
 import { stopSpeaking } from './speech.js';
 import { createTabs } from './tabs.js';
 
@@ -18,9 +20,9 @@ const routes = [
   { pattern: /^\/$/, title: () => APP_NAME, render: renderHome },
   { pattern: /^\/lesson$/, title: () => "Today's lesson", render: () => renderLesson() },
   { pattern: new RegExp(`^/lesson/${DAY}$`), title: (day) => `Review Day ${day}`, render: renderLesson },
-  { pattern: new RegExp(`^/quiz/${DAY}$`), title: (day) => `Quiz for Day ${day}` },
+  { pattern: new RegExp(`^/quiz/${DAY}$`), title: (day) => `Quiz for Day ${day}`, render: renderQuiz },
   { pattern: /^\/practice\/(mixed|weak|match)$/, title: (mode) => `Practice: ${mode}` },
-  { pattern: /^\/graduation$/, title: () => 'Graduation' },
+  { pattern: /^\/graduation$/, title: () => 'Graduation', render: renderGraduation },
 ];
 
 // Identifies the latest render, so a slower earlier one can't overwrite it.
@@ -66,6 +68,7 @@ async function render() {
   if (renderId !== latestRender || !nodes) return;
 
   app.replaceChildren(...nodes);
+  app.querySelector('[data-autofocus]')?.focus();
   document.title = title === APP_NAME ? APP_NAME : `${title} · ${APP_NAME}`;
 }
 

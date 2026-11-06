@@ -117,6 +117,16 @@ export function getTotalStars() {
   return Object.values(read().completedDays).reduce((sum, { stars }) => sum + stars, 0);
 }
 
+export function recordAnswer(itemId, isCorrect) {
+  const progress = read();
+  const stats = progress.itemStats[itemId] ?? { seen: 0, wrong: 0 };
+  progress.itemStats[itemId] = {
+    seen: stats.seen + 1,
+    wrong: stats.wrong + (isCorrect ? 0 : 1),
+  };
+  write(progress);
+}
+
 // Finishes a new lesson, or keeps the best stars when retaking a completed day.
 // Retakes don't affect the daily limit or the streak. Returns false if not allowed.
 export function completeLesson(day, stars) {

@@ -209,6 +209,79 @@ input {
   flex: 1;
 }
 
+.question {
+  margin-bottom: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.question h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.question-word {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.question .chat-bubble {
+  max-width: 85%;
+  margin: 0 0 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid currentColor;
+  border-radius: 1rem 1rem 1rem 0;
+}
+
+.options li {
+  margin-bottom: 0.5rem;
+}
+
+.options button {
+  width: 100%;
+  text-align: start;
+  color: inherit;
+}
+
+.typed-answer {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.typed-answer input {
+  flex: 1;
+  min-width: 0;
+}
+
+.feedback p {
+  margin: 0.5rem 0;
+}
+
+.result {
+  overflow-wrap: anywhere;
+}
+
+.result:focus {
+  outline: none;
+}
+
+.result h2 {
+  margin: 0 0 0.5rem;
+}
+
+.result-stars {
+  margin: 0 0 0.75rem;
+  font-size: 2rem;
+}
+
+.result-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
 .debug-panel {
   border-top: 1px solid currentColor;
 }

@@ -44,3 +44,30 @@ export async function loadLesson(day) {
     abbreviations: entry.abbreviations.map((id) => abbreviations.find((item) => item.id === id)),
   };
 }
+
+// Splits a list into items taught up to the given day and items still to come.
+function splitByDay(items, curriculum, key, day) {
+  const learnedIds = curriculum.filter((entry) => entry.day <= day).flatMap((entry) => entry[key]);
+  return {
+    learned: items.filter((item) => learnedIds.includes(item.id)),
+    upcoming: items.filter((item) => !learnedIds.includes(item.id)),
+  };
+}
+
+// What a day's quiz needs: its new items, earlier items to review, and wrong-answer pools.
+export async function loadQuizContent(day) {
+  const [curriculum, verbs, abbreviations, today] = await Promise.all([
+    loadCurriculum(),
+    loadVerbs(),
+    loadAbbreviations(),
+    loadLesson(day),
+  ]);
+  const pools = {
+    verbs: splitByDay(verbs, curriculum, 'verbs', day),
+    abbreviations: splitByDay(abbreviations, curriculum, 'abbreviations', day),
+  };
+  const todayIds = [...today.verbs, ...today.abbreviations].map((item) => item.id);
+  const earlier = [...pools.verbs.learned, ...pools.abbreviations.learned]
+    .filter((item) => !todayIds.includes(item.id));
+  return { today, earlier, pools };
+}
