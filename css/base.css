@@ -110,6 +110,105 @@ input {
   margin: 0;
 }
 
+.card {
+  overflow-wrap: anywhere;
+}
+
+.card:focus,
+[tabindex="-1"]:focus {
+  outline: none;
+}
+
+.card h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
+  line-height: 1.25;
+}
+
+.card p {
+  margin: 0 0 0.75rem;
+}
+
+.meanings {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+.meanings p {
+  margin-bottom: 0.25rem;
+}
+
+.form-rows {
+  margin-bottom: 1rem;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.form-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.form-details p {
+  margin: 0;
+}
+
+.form-word {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.card .form-example {
+  flex-basis: 100%;
+  margin: 0.25rem 0 0;
+}
+
+.speak {
+  flex: none;
+  min-width: 44px;
+  padding: 0.25rem;
+}
+
+.abbreviation-full {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.abbreviation-full p {
+  flex: 1;
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.rude-warning {
+  font-weight: 700;
+}
+
+.card .chat-bubble {
+  max-width: 85%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid currentColor;
+  border-radius: 1rem 1rem 1rem 0;
+}
+
+.lesson-nav {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.lesson-nav button {
+  flex: 1;
+}
+
 .debug-panel {
   border-top: 1px solid currentColor;
 }

@@ -1,5 +1,6 @@
 // The home page tabs: How It Works, My Journey and Practice Arena.
 
+import { element, link, persian } from './dom.js';
 import {
   canStartLesson,
   getCompletedDayCount,
@@ -34,25 +35,6 @@ const TABS = [
 ];
 
 let selectedId = TABS[0].id;
-
-function element(tag, text) {
-  const node = document.createElement(tag);
-  if (text !== undefined) node.textContent = text;
-  return node;
-}
-
-function link(href, text) {
-  const node = element('a', text);
-  node.href = href;
-  return node;
-}
-
-function persian(tag, text) {
-  const node = element(tag, text);
-  node.lang = 'fa';
-  node.dir = 'rtl';
-  return node;
-}
 
 function renderHowItWorks() {
   const steps = element('ol');

@@ -2,6 +2,8 @@
 
 import { initDebugPanel } from './debug.js';
 import { createHero } from './hero.js';
+import { renderLesson } from './lesson.js';
+import { stopSpeaking } from './speech.js';
 import { createTabs } from './tabs.js';
 
 const APP_NAME = 'Rezi Knows English';
@@ -14,8 +16,8 @@ const DAY = '([1-9]|[12][0-9]|30)';
 
 const routes = [
   { pattern: /^\/$/, title: () => APP_NAME, render: renderHome },
-  { pattern: /^\/lesson$/, title: () => "Today's lesson" },
-  { pattern: new RegExp(`^/lesson/${DAY}$`), title: (day) => `Review Day ${day}` },
+  { pattern: /^\/lesson$/, title: () => "Today's lesson", render: () => renderLesson() },
+  { pattern: new RegExp(`^/lesson/${DAY}$`), title: (day) => `Review Day ${day}`, render: renderLesson },
   { pattern: new RegExp(`^/quiz/${DAY}$`), title: (day) => `Quiz for Day ${day}` },
   { pattern: /^\/practice\/(mixed|weak|match)$/, title: (mode) => `Practice: ${mode}` },
   { pattern: /^\/graduation$/, title: () => 'Graduation' },
@@ -60,14 +62,15 @@ async function render() {
 
   const { route, params } = matched;
   const title = route.title(...params);
-  const nodes = route.render ? await route.render() : renderPlaceholder(title);
-  if (renderId !== latestRender) return;
+  const nodes = route.render ? await route.render(...params) : renderPlaceholder(title);
+  if (renderId !== latestRender || !nodes) return;
 
   app.replaceChildren(...nodes);
   document.title = title === APP_NAME ? APP_NAME : `${title} · ${APP_NAME}`;
 }
 
 window.addEventListener('hashchange', () => {
+  stopSpeaking();
   render();
   // Moves keyboard and screen reader users to the new page.
   app.focus();
