@@ -1,7 +1,7 @@
 // Light and dark mode: follows the phone unless a theme is chosen in Settings.
 
 const THEME_KEY = 'rezi-knows-english:theme';
-const THEME_COLORS = { light: '#fff6f1', dark: '#1c1424' };
+const THEME_COLORS = { light: '#fff5f9', dark: '#1c1424' };
 const darkQuery = matchMedia('(prefers-color-scheme: dark)');
 
 // Returns "system", "light" or "dark".

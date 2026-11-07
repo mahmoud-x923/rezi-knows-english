@@ -1,14 +1,15 @@
 /* Cute and cozy theme, mobile first. Every color comes from the tokens below. */
 
+/* "only" stops browsers and dark-mode tools from repainting these colors. */
 :root {
-  color-scheme: light;
-  --bg: #fff6f1;
+  color-scheme: only light;
+  --bg: #fff5f9;
   --surface: #ffffff;
-  --surface-soft: #fff0f5;
-  --surface-lavender: #f3edff;
+  --surface-soft: #ffe9f2;
+  --surface-lavender: #f5eeff;
   --text: #3a2340;
   --text-muted: #6b5070;
-  --border: #f0d3e0;
+  --border: #f7cfe0;
   --primary: #b8336b;
   --primary-hover: #a12a5c;
   --on-primary: #ffffff;
@@ -19,7 +20,7 @@
   --correct-bg: #dff3e8;
   --wrong: #a3263d;
   --wrong-bg: #fde4e9;
-  --path: #f2b8cf;
+  --path: #f5b3cf;
   --focus: #7a4ed4;
   --tense-base-bg: #ece4ff;
   --tense-base-text: #4b2f8a;
@@ -35,7 +36,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    color-scheme: dark;
+    color-scheme: only dark;
     --bg: #1c1424;
     --surface: #2a1e33;
     --surface-soft: #35233f;
@@ -66,7 +67,7 @@
 }
 
 :root[data-theme="dark"] {
-  color-scheme: dark;
+  color-scheme: only dark;
   --bg: #1c1424;
   --surface: #2a1e33;
   --surface-soft: #35233f;
