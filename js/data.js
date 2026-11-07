@@ -19,6 +19,10 @@ export function loadGreetings() {
   return loadJson('data/greetings.json');
 }
 
+export function loadNames() {
+  return loadJson('data/names.json');
+}
+
 export function loadVerbs() {
   return loadJson('data/verbs.json');
 }

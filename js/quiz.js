@@ -1,7 +1,8 @@
 // The quiz engine: question generators, the question flow and the result screen.
 
-import { loadQuizContent } from './data.js';
+import { loadNames, loadQuizContent } from './data.js';
 import { element, link, persian } from './dom.js';
+import { pickNickname } from './hero.js';
 import { renderLoadError } from './lesson.js';
 import { isSpeechAvailable, speak, stopSpeaking } from './speech.js';
 import {
@@ -325,14 +326,15 @@ export function createQuizRunner(questions, onFinish) {
   return [position, content];
 }
 
-function renderNextStep(isRetake) {
+function renderNextStep(isRetake, names) {
   if (hasGraduated()) return link('#/graduation', 'Graduation 🎓');
   if (isRetake) return null;
   if (isBonusAvailable()) return link('#/lesson', 'Bonus lesson 🚀');
-  return canStartLesson() ? link('#/lesson', "Start today's lesson") : element('p', 'See you tomorrow 👋');
+  if (canStartLesson()) return link('#/lesson', "Start today's lesson");
+  return element('p', names ? `See you tomorrow, ${pickNickname(names)} 👋` : 'See you tomorrow 👋');
 }
 
-function createResult(day, correct, total, isRetake, isSaved, onRetake) {
+function createResult(day, correct, total, isRetake, isSaved, names, onRetake) {
   const stars = getStarsForScore(correct, total);
   const best = getProgress().completedDays[day]?.stars;
   const result = element('div');
@@ -348,7 +350,7 @@ function createResult(day, correct, total, isRetake, isSaved, onRetake) {
   if (!isSaved) result.append(element('p', "You've reached today's lesson limit, so this result wasn't saved."));
   result.append(element('p', `🔥 Streak: ${getStreak()}`));
 
-  const nextStep = isSaved ? renderNextStep(isRetake) : null;
+  const nextStep = isSaved ? renderNextStep(isRetake, names) : null;
   if (nextStep) result.append(nextStep);
 
   const actions = element('div');
@@ -371,8 +373,9 @@ export async function renderQuiz(dayParam) {
 
   const title = `Quiz for Day ${day}`;
   let content;
+  let names;
   try {
-    content = await loadQuizContent(day);
+    [content, names] = await Promise.all([loadQuizContent(day), loadNames().catch(() => null)]);
   } catch {
     return renderLoadError(title);
   }
@@ -387,7 +390,7 @@ export async function renderQuiz(dayParam) {
       const isRetake = getDayStatus(day) === 'completed';
       const stars = getStarsForScore(correct, questions.length);
       const isSaved = completeLesson(day, stars);
-      const result = createResult(day, correct, questions.length, isRetake, isSaved, () => {
+      const result = createResult(day, correct, questions.length, isRetake, isSaved, names, () => {
         start();
         (page.querySelector('[data-autofocus]') ?? page.querySelector('[tabindex="-1"]')).focus();
       });

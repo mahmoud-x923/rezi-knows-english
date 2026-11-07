@@ -29,6 +29,7 @@ const FILES = [
   'data/abbreviations.json',
   'data/curriculum.json',
   'data/greetings.json',
+  'data/names.json',
   'data/verbs.json',
   'icons/icon-192.png',
   'icons/icon-512.png',

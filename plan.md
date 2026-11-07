@@ -15,9 +15,9 @@ It teaches two things over a **30-day journey**:
 Every item shows its meaning in **Persian (فارسی)** and **Arabic (العربية)**.
 
 ### Personal details (used in greetings)
-The real values live in `PERSONAL.local.md`, which is gitignored and stored only locally. Never copy them into a tracked file.
+The values live in `data/names.json` and are part of the site, so they show up without any setup. Birth details are not used anywhere.
 - Name: **{{name}}** / **{{fullName}}**
-- Nicknames: **{{nickname1}}**, **{{nickname2}}**
+- Nicknames: a list, and `{{nickname}}` picks one at random each time
 
 ---
 
@@ -76,7 +76,7 @@ Quiz: ~8 questions on today's 5 items + 2–3 review questions from earlier days
    ↓
 Result screen: score, stars, streak update, and either
   • "Bonus lesson 🚀" (if the bonus is still available today), or
-  • "See you tomorrow, {{nickname1}} 👋", or
+  • "See you tomorrow, {{nickname}} 👋", or
   • "Graduation 🎓" (after Day 30)
 ```
 
@@ -173,9 +173,9 @@ Each quiz mixes these question types at random:
 Kept separate from the content so the order can change without editing the items. Each verb and each abbreviation appears in exactly one day.
 
 ### Greetings: about 25
-`data/greetings.json`. Short, cheerful messages using {{name}}, {{fullName}}, {{nickname1}} and {{nickname2}}. For example:
-- "Good morning, {{nickname1}} 👋 Ready for today's 5 new words?"
-- "{{nickname2}} is back! Let's make English easy today 💪"
+`data/greetings.json`. Short, cheerful messages using {{name}}, {{fullName}} and {{nickname}}. For example:
+- "Good morning, {{nickname}} 👋 Ready for some new English?"
+- "{{nickname}} is back! Let's make English easy today 💪"
 
 Each greeting can have optional conditions: `time` (morning / afternoon / evening), `minStreak`, `nearGraduation`. Only greetings whose conditions match are picked.
 

@@ -18,10 +18,10 @@
   { "text": "Hi {{name}}! Ready to learn something new? 🌱" },
   { "text": "{{name}}, your English is growing every day 🌿" },
   { "text": "Welcome back, {{fullName}}! Let's pick up where you left off 📖" },
-  { "text": "{{nickname1}}, let's learn something fun today ✨" },
-  { "text": "Good morning, {{nickname1}} 👋 Ready for some new English?", "time": "morning" },
-  { "text": "Good evening, {{nickname1}} 🌙 One small lesson before bed?", "time": "evening" },
-  { "text": "{{nickname2}} is back! Let's make English easy today 💪" },
-  { "text": "{{nickname2}} knows more English every day 😄" },
+  { "text": "{{nickname}}, let's learn something fun today ✨" },
+  { "text": "Good morning, {{nickname}} 👋 Ready for some new English?", "time": "morning" },
+  { "text": "Good evening, {{nickname}} 🌙 One small lesson before bed?", "time": "evening" },
+  { "text": "{{nickname}} is back! Let's make English easy today 💪" },
+  { "text": "{{nickname}} knows more English every day 😄" },
   { "text": "{{name}}, one more lesson and you'll be even better 🌟", "minStreak": 3 }
 ]
