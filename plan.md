@@ -275,4 +275,4 @@ All paths are **relative** so the site works under a GitHub Pages sub-path (`use
 7. Settings (reset / export / import), PWA manifest, icons, service worker
 8. Testing on a real phone + GitHub Pages deployment steps in a README
 
-**Iteration 2 (later):** theme, colors, illustrations, animations, sound effects, polish.
+**Iteration 2:** look and feel, assets and animations. See `plan-iteration-2.md`.

@@ -23,13 +23,13 @@ The app opens full screen from the home screen and works offline after the first
 
 Before handing the site over, check these on the phone it will be used on:
 
-- [ ] The home page fits the screen with no sideways scrolling.
-- [ ] Persian and Arabic text reads right to left in the Vazirmatn font.
-- [ ] 🔊 buttons speak in an English voice, and listening questions play their word.
-- [ ] A typed quiz answer opens the keyboard without auto-capitalizing or auto-correcting.
-- [ ] Finishing Day 1 offers the bonus lesson, and finishing that says "See you tomorrow".
-- [ ] The app installs, opens from the home screen, and works in airplane mode.
-- [ ] **⚙️ Settings → Export progress** saves a file, and **Import progress** restores it.
+- [x] The home page fits the screen with no sideways scrolling.
+- [x] Persian and Arabic text reads right to left in the Vazirmatn font.
+- [x] 🔊 buttons speak in an English voice, and listening questions play their word.
+- [x] A typed quiz answer opens the keyboard without auto-capitalizing or auto-correcting.
+- [x] Finishing Day 1 offers the bonus lesson, and finishing that says "See you tomorrow".
+- [x] The app installs, opens from the home screen, and works in airplane mode.
+- [x] **⚙️ Settings → Export progress** saves a file, and **Import progress** restores it.
 
 ## Debug mode
 
