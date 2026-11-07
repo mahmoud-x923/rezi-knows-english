@@ -2,6 +2,7 @@
 
 import { loadNames, loadQuizContent } from './data.js';
 import { buttonLink, element, link, persian } from './dom.js';
+import { createBurst } from './decor.js';
 import { createGuide, say } from './guide.js';
 import { pickNickname } from './names.js';
 import { renderLoadError } from './lesson.js';
@@ -250,7 +251,9 @@ function createOptions(question, onAnswer) {
           other.classList.add('is-correct');
         }
       });
-      if (!isCorrect) {
+      if (isCorrect) {
+        button.append(createBurst());
+      } else {
         button.textContent = `❌ ${option}`;
         button.classList.add('is-wrong');
       }
@@ -285,7 +288,9 @@ function createTypedAnswer(question, onAnswer) {
     if (!input.value.trim()) return;
     input.readOnly = true;
     submit.disabled = true;
-    onAnswer(checkTypedAnswer(input.value, question.answers));
+    const result = checkTypedAnswer(input.value, question.answers);
+    input.classList.add(result === 'correct' ? 'is-correct' : 'is-wrong');
+    onAnswer(result);
   });
   return form;
 }
@@ -307,7 +312,7 @@ export function createQuizRunner(questions, onFinish) {
     stopSpeaking();
     const question = questions[index];
     position.textContent = `Question ${index + 1} of ${questions.length}`;
-    filled.style.width = `${((index + 1) / questions.length) * 100}%`;
+    filled.style.setProperty('--progress', (index + 1) / questions.length);
 
     const feedback = element('div');
     feedback.className = 'feedback';
@@ -380,14 +385,24 @@ function createResult(day, correct, total, isRetake, isSaved, names, onRetake) {
   result.tabIndex = -1;
 
   const heading = element('h2', `You got ${correct} of ${total} right`);
-  const earned = element('p', '⭐'.repeat(stars));
+  const earned = element('p');
   earned.className = 'result-stars';
+  earned.setAttribute('role', 'img');
+  earned.setAttribute('aria-label', `${stars} of 3 stars`);
+  for (let i = 0; i < stars; i++) {
+    const star = element('span', '⭐');
+    star.style.setProperty('--i', i);
+    earned.append(star);
+  }
   result.append(heading, earned, createResultGuide(stars));
 
   if (isRetake && best > stars) result.append(element('p', `Your best for this day: ${'⭐'.repeat(best)}`));
   if (!isSaved) result.append(element('p', "You've reached today's lesson limit, so this result wasn't saved."));
-  const streak = element('p', `🔥 Streak: ${getStreak()}`);
+  const streak = element('p');
   streak.className = 'result-streak';
+  const flame = element('span', '🔥');
+  flame.className = 'flame';
+  streak.append(flame, ` Streak: ${getStreak()}`);
   result.append(streak);
 
   const nextStep = isSaved ? renderNextStep(isRetake, names) : null;

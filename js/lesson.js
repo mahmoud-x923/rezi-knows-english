@@ -147,12 +147,16 @@ function createLessonPage(title, day, label, isReview, lesson) {
   dots.className = 'progress-dots';
   dots.setAttribute('aria-hidden', 'true');
   const content = element('div');
+  content.className = 'lesson-content';
   content.tabIndex = -1;
   const nav = element('div');
   nav.className = 'lesson-nav';
+  let shownIndex = 0;
 
   function show(index, moveFocus = true) {
     stopSpeaking();
+    content.dataset.direction = index < shownIndex ? 'back' : 'forward';
+    shownIndex = index;
     const isEnd = index === cards.length;
     position.textContent = isEnd ? label : `${label} · Card ${index + 1} of ${cards.length}`;
     dots.replaceChildren(...cards.map((card, dot) => {

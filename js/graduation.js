@@ -1,6 +1,6 @@
 // The graduation page, shown after Day 30 is completed.
 
-import { decorRow } from './decor.js';
+import { createFloaters, decorRow } from './decor.js';
 import { actions, buttonLink, element, link, persian } from './dom.js';
 import { createGuide, say } from './guide.js';
 import { getTotalStars, hasGraduated, TOTAL_DAYS } from './state.js';
@@ -21,6 +21,7 @@ export function renderGraduation() {
   const page = element('div');
   page.className = 'graduation';
   page.append(
+    createFloaters(),
     decorRow('heart', 'sparkle', 'star', 'sparkle', 'heart'),
     guide,
     persian('p', 'آفرین! هر ۳۰ روز را تمام کردی.'),

@@ -17,6 +17,35 @@ export function decor(shape, className = '') {
   return svg;
 }
 
+// Sparkles that fly out from a correct answer, then fade.
+export function createBurst() {
+  const burst = document.createElement('span');
+  burst.className = 'burst';
+  burst.setAttribute('aria-hidden', 'true');
+  for (let i = 0; i < 6; i++) {
+    const sparkle = decor('sparkle');
+    sparkle.style.setProperty('--angle', `${i * 60}deg`);
+    burst.append(sparkle);
+  }
+  return burst;
+}
+
+// Hearts and sparkles that float up behind the graduation page.
+export function createFloaters() {
+  const floaters = document.createElement('div');
+  floaters.className = 'floaters';
+  floaters.setAttribute('aria-hidden', 'true');
+  const shapes = ['heart', 'sparkle', 'heart', 'star', 'heart', 'sparkle', 'heart', 'sparkle'];
+  shapes.forEach((shape, i) => {
+    const drawing = decor(shape);
+    drawing.style.setProperty('--x', `${6 + i * 12}%`);
+    drawing.style.setProperty('--delay', `${(i * 0.7) % 4}s`);
+    drawing.style.setProperty('--duration', `${5 + (i % 3)}s`);
+    floaters.append(drawing);
+  });
+  return floaters;
+}
+
 // A short row of drawings, such as a moon and stars.
 export function decorRow(...shapes) {
   const row = document.createElement('div');

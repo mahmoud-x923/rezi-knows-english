@@ -3,6 +3,7 @@
 import { buttonLink, element, link, persian } from './dom.js';
 import { decorRow } from './decor.js';
 import { createGuide, say } from './guide.js';
+import { replay } from './motion.js';
 import {
   canStartLesson,
   getCompletedDayCount,
@@ -70,7 +71,13 @@ function renderSummary() {
   summary.append(...rows.map(([term, value]) => {
     const stat = element('div');
     stat.className = 'stat';
-    stat.append(element('dt', term), element('dd', value));
+    const label = element('dt', term);
+    if (term.startsWith('🔥')) {
+      const flame = element('span', '🔥');
+      flame.className = 'flame';
+      label.replaceChildren(flame, term.slice(2));
+    }
+    stat.append(label, element('dd', value));
     return stat;
   }));
   return summary;
@@ -100,6 +107,7 @@ function renderJourney() {
     const stop = element('li');
     stop.className = `stop-${getDayStatus(day)}`;
     stop.dataset.day = day;
+    if (stop.className === 'stop-locked') stop.addEventListener('click', () => replay(stop, 'wiggle'));
     stop.append(renderStop(day, completedDays));
     path.append(stop);
   }
@@ -163,6 +171,7 @@ export function createTabs() {
       buttons[index].setAttribute('aria-selected', String(isSelected));
       buttons[index].tabIndex = isSelected ? 0 : -1;
     });
+    list.style.setProperty('--tab-index', TABS.findIndex((tab) => tab.id === id));
     panel.setAttribute('aria-labelledby', `tab-${id}`);
     panel.replaceChildren(...TABS.find((tab) => tab.id === id).render());
   }

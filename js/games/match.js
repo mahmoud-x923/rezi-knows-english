@@ -2,6 +2,7 @@
 
 import { element, link, persian } from '../dom.js';
 import { createGuide, say } from '../guide.js';
+import { replay } from '../motion.js';
 import { shuffled } from '../quiz.js';
 import { recordAnswer } from '../state.js';
 
@@ -81,6 +82,8 @@ export function createMatchGame(items, random = Math.random) {
       if (!isMatch) {
         misses++;
         message.textContent = '❌ Not a pair, try again';
+        replay(english.button, 'shake');
+        replay(meaning.button, 'shake');
         return;
       }
       matched++;
@@ -91,6 +94,7 @@ export function createMatchGame(items, random = Math.random) {
       ]) {
         button.disabled = true;
         button.textContent = `✅ ${pair[side]}`;
+        replay(button, 'matched');
       }
       if (matched === pairs.length) finish();
       else game.querySelector('.match-board button:not(:disabled)').focus();

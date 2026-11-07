@@ -1122,3 +1122,293 @@ input[type="text"]:focus {
   flex-wrap: wrap;
   gap: 0.5rem;
 }
+
+/* ---------- Animations ----------
+   Only transform and opacity move, so phones can keep them smooth. One-off
+   animations take 400ms or less; only gentle loops run longer. */
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes pop-in {
+  0% { opacity: 0; transform: scale(0.85); }
+  70% { opacity: 1; transform: scale(1.03); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-8px) rotate(3deg); }
+}
+
+@keyframes slide-from-right {
+  from { opacity: 0; transform: translateX(32px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes slide-from-left {
+  from { opacity: 0; transform: translateX(-32px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes bounce {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.06); }
+  65% { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(2px); }
+}
+
+@keyframes sparkle-burst {
+  0% { opacity: 1; transform: rotate(var(--angle)) translateY(0) scale(0.4); }
+  100% { opacity: 0; transform: rotate(var(--angle)) translateY(-34px) scale(1); }
+}
+
+@keyframes star-pop {
+  0% { opacity: 0; transform: scale(0.3) rotate(-20deg); }
+  70% { opacity: 1; transform: scale(1.2) rotate(6deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@keyframes flicker {
+  0%, 100% { transform: scale(1) rotate(-2deg); opacity: 1; }
+  50% { transform: scale(1.12) rotate(3deg); opacity: 0.85; }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+
+@keyframes float-up {
+  0% { opacity: 0; transform: translateY(0) scale(0.6); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-220px) scale(1.1); }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.75); }
+}
+
+/* Page changes fade in */
+#app > * {
+  animation: fade-in 250ms ease-out both;
+}
+
+/* Curly: his bubble pops in whenever he says something new */
+.guide-bubble {
+  animation: pop-in 300ms ease-out both;
+  transform-origin: bottom left;
+}
+
+/* Big stickers float gently, like he's hovering beside you */
+.guide-large .guide-sticker {
+  animation: float 3.6s ease-in-out infinite;
+}
+
+.hero h1 .decor {
+  animation: twinkle 2.4s ease-in-out infinite;
+}
+
+.hero h1 .hero-heart {
+  animation-delay: 1.2s;
+}
+
+/* Tabs: a highlight slides to the chosen tab */
+.tab-list {
+  position: relative;
+}
+
+.tab-list::before {
+  content: "";
+  position: absolute;
+  top: 0.3rem;
+  bottom: 0.3rem;
+  left: 0.3rem;
+  width: calc((100% - 0.6rem - 0.5rem) / 3);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  transform: translateX(calc(var(--tab-index, 0) * (100% + 0.25rem)));
+  transition: transform 300ms ease;
+}
+
+.tab {
+  position: relative;
+}
+
+.tab[aria-selected="true"] {
+  background: transparent;
+  box-shadow: none;
+}
+
+.tab-panel > * {
+  animation: fade-in 250ms ease-out both;
+}
+
+/* Buttons squish softly when tapped */
+button,
+.button {
+  transition: transform 120ms ease, border-color 150ms ease, background-color 150ms ease;
+}
+
+/* Lesson cards slide in from the side you're moving toward. Clipping sideways
+   stops the sliding card from widening the page, and the margin keeps its shadow. */
+.lesson-content {
+  overflow-x: clip;
+  overflow-clip-margin: 1rem;
+}
+
+.lesson-content[data-direction="forward"] > * {
+  animation: slide-from-right 280ms ease-out both;
+}
+
+.lesson-content[data-direction="back"] > * {
+  animation: slide-from-left 280ms ease-out both;
+}
+
+.progress-dots span,
+.progress-bar span {
+  transition: transform 300ms ease, background-color 300ms ease;
+}
+
+.progress-bar span {
+  width: 100%;
+  transform-origin: left;
+  transform: scaleX(var(--progress, 0));
+  transition: transform 350ms ease;
+}
+
+/* Answers: a bounce and sparkles when right, a small shake when wrong */
+.options button {
+  position: relative;
+  overflow: visible;
+}
+
+.options .is-correct,
+.typed-answer input.is-correct {
+  animation: bounce 400ms ease-out;
+}
+
+.options .is-wrong,
+.typed-answer input.is-wrong {
+  animation: shake 350ms ease-in-out;
+}
+
+.burst {
+  position: absolute;
+  top: 50%;
+  right: 1.5rem;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.burst .decor {
+  position: absolute;
+  top: -0.5rem;
+  left: -0.5rem;
+  width: 1rem;
+  height: 1rem;
+  fill: var(--primary);
+  animation: sparkle-burst 400ms ease-out both;
+}
+
+/* Result: stars pop in one by one */
+.result-stars span {
+  display: inline-block;
+  animation: star-pop 350ms ease-out both;
+  animation-delay: calc(var(--i) * 150ms + 150ms);
+}
+
+/* Streak flame flickers */
+.flame {
+  display: inline-block;
+  animation: flicker 1.6s ease-in-out infinite;
+}
+
+/* My Journey: today's stop pulses, a locked stop wiggles when tapped */
+.journey .stop-today::before {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.journey .stop-locked {
+  cursor: pointer;
+}
+
+.journey .wiggle::before {
+  animation: wiggle 400ms ease-in-out;
+}
+
+/* Match pairs: tiles pop when matched, shake when not */
+.match-board .matched {
+  animation: bounce 300ms ease-out;
+}
+
+.match-board .shake {
+  animation: shake 350ms ease-in-out;
+}
+
+/* Graduation: hearts and sparkles float up */
+.graduation {
+  position: relative;
+  overflow: hidden;
+}
+
+.graduation > :not(.floaters) {
+  position: relative;
+}
+
+.floaters {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.floaters .decor {
+  position: absolute;
+  bottom: 0;
+  left: var(--x);
+  width: 1.2rem;
+  height: 1.2rem;
+  opacity: 0;
+  animation: float-up var(--duration) ease-in infinite;
+  animation-delay: var(--delay);
+}
+
+/* Looping animations pause while the app is in the background */
+.is-hidden *,
+.is-hidden *::before {
+  animation-play-state: paused !important;
+}
+
+/* "Remove animations" on the phone turns all movement off */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .burst,
+  .floaters {
+    display: none;
+  }
+}
