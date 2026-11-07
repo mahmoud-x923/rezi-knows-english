@@ -21,6 +21,12 @@
   --wrong-bg: #fde4e9;
   --path: #f2b8cf;
   --focus: #7a4ed4;
+  --tense-base-bg: #ece4ff;
+  --tense-base-text: #4b2f8a;
+  --tense-past-bg: #ffe2d2;
+  --tense-past-text: #84350f;
+  --tense-pp-bg: #d9f2e5;
+  --tense-pp-text: #1b5a3d;
   --shadow: 0 6px 18px rgba(184, 51, 107, 0.12);
   --radius: 20px;
   --radius-small: 14px;
@@ -49,6 +55,12 @@
     --wrong-bg: #4a2029;
     --path: #6d4766;
     --focus: #c6a8ff;
+    --tense-base-bg: #3b305a;
+    --tense-base-text: #ddd0ff;
+    --tense-past-bg: #4a2e24;
+    --tense-past-text: #ffc9ad;
+    --tense-pp-bg: #1f3b2e;
+    --tense-pp-text: #a8ecc8;
     --shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
   }
 }
@@ -74,6 +86,12 @@
   --wrong-bg: #4a2029;
   --path: #6d4766;
   --focus: #c6a8ff;
+  --tense-base-bg: #3b305a;
+  --tense-base-text: #ddd0ff;
+  --tense-past-bg: #4a2e24;
+  --tense-past-text: #ffc9ad;
+  --tense-pp-bg: #1f3b2e;
+  --tense-pp-text: #a8ecc8;
   --shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
@@ -734,41 +752,81 @@ input[type="text"]:focus {
   margin-bottom: 1rem;
 }
 
-.form-row {
+/* Verb card: the verb on the left, its meaning on the right */
+.verb-top {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0 0.75rem;
-  padding: 0.75rem 1rem;
-  border: 2px solid var(--border);
-  border-radius: var(--radius-small);
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-.form-details {
-  flex: 1;
+.verb-top h2 {
+  margin: 0;
   min-width: 0;
 }
 
-.form-details p {
+.verb-top .meanings {
+  flex: 0 1 auto;
   margin: 0;
+  padding: 0.4rem 0.8rem;
+  font-size: 1.05rem;
+  text-align: end;
 }
 
-.form-details p:first-child {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  font-weight: 700;
+/* Tense rows: badge, word and 🔊 on the left, the example underneath */
+.form-row {
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--border);
+  border-left: 6px solid var(--tense-bg);
+  border-radius: var(--radius-small);
 }
+
+.tense-row-base { --tense-bg: var(--tense-base-bg); }
+.tense-row-past { --tense-bg: var(--tense-past-bg); }
+.tense-row-participle { --tense-bg: var(--tense-pp-bg); }
+
+.form-main {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.tense-badge {
+  flex: none;
+  min-width: 3.6rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.tense-base { background: var(--tense-base-bg); color: var(--tense-base-text); }
+.tense-past { background: var(--tense-past-bg); color: var(--tense-past-text); }
+.tense-participle { background: var(--tense-pp-bg); color: var(--tense-pp-text); }
 
 .form-word {
+  margin: 0;
+  min-width: 0;
   font-size: 1.3rem;
   font-weight: 800;
 }
 
 .card .form-example {
-  flex-basis: 100%;
-  margin: 0.35rem 0 0;
+  margin: 0.4rem 0 0;
   color: var(--text-muted);
   font-style: italic;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .speak {

@@ -44,44 +44,67 @@ function createMeanings(item) {
   return meanings;
 }
 
-function createFormRow(label, forms, example) {
-  const row = element('li');
-  row.className = 'form-row';
+// Each tense has its own badge and color, the same on every card.
+const TENSES = [
+  { key: 'base', badge: 'BASE', name: 'Base form' },
+  { key: 'past', badge: 'PAST', name: 'Past simple' },
+  { key: 'participle', badge: 'P.P.', name: 'Past participle' },
+];
 
-  const details = element('div');
-  details.className = 'form-details';
+function createTenseBadge(tense) {
+  const badge = element('span');
+  badge.className = `tense-badge tense-${tense.key}`;
+  const shown = element('span', tense.badge);
+  shown.setAttribute('aria-hidden', 'true');
+  // Screen readers hear the full name, such as "Past participle", not "P.P."
+  const spokenName = element('span', tense.name);
+  spokenName.className = 'visually-hidden';
+  badge.append(shown, spokenName);
+  return badge;
+}
+
+function createFormRow(tense, forms, example) {
+  const row = element('li');
+  row.className = `form-row tense-row-${tense.key}`;
+
   const word = element('p', forms.join(' / '));
   word.className = 'form-word';
-  details.append(element('p', label), word);
+
+  const main = element('div');
+  main.className = 'form-main';
+  const spoken = forms.join(', ');
+  main.append(createTenseBadge(tense), word, ...speechControls(`${tense.name}: ${spoken}`, spoken));
 
   const sentence = element('p', example);
   sentence.className = 'form-example';
 
-  const spoken = forms.join(', ');
-  row.append(details, ...speechControls(`${label}: ${spoken}`, spoken), sentence);
+  row.append(main, sentence);
   return row;
 }
 
 function createVerbCard(verb) {
   const main = [verb.base, verb.past[0], verb.participle[0]];
   const card = element('article');
-  card.className = 'card';
+  card.className = 'card verb-card';
 
-  const heading = element('h2', main.join(' → '));
+  // The verb on the left, its meaning on the right
+  const top = element('div');
+  top.className = 'verb-top';
+  const heading = element('h2', verb.base);
   heading.className = 'verb-heading';
+  top.append(heading, createMeanings(verb));
 
   const rows = element('ul');
   rows.className = 'form-rows';
-  rows.append(
-    createFormRow('Base form', [verb.base], verb.examples.base),
-    createFormRow('Past simple', verb.past, verb.examples.past),
-    createFormRow('Past participle', verb.participle, verb.examples.participle),
-  );
+  rows.append(...TENSES.map((tense) => {
+    const forms = tense.key === 'base' ? [verb.base] : verb[tense.key];
+    return createFormRow(tense, forms, verb.examples[tense.key]);
+  }));
 
   const pattern = element('p', `Pattern ${verb.pattern}: ${main.join(' / ')}`);
   pattern.className = 'pattern';
 
-  card.append(heading, createMeanings(verb), rows, pattern);
+  card.append(top, rows, pattern);
   return card;
 }
 
