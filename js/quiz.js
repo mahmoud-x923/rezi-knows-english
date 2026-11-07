@@ -6,6 +6,7 @@ import { createBurst } from './decor.js';
 import { createGuide, say } from './guide.js';
 import { pickNickname } from './names.js';
 import { renderLoadError } from './lesson.js';
+import { play } from './sound.js';
 import { isSpeechAvailable, speak, stopSpeaking } from './speech.js';
 import {
   canStartLesson,
@@ -327,6 +328,7 @@ export function createQuizRunner(questions, onFinish) {
     function handleAnswer(result) {
       const isCorrect = result === 'correct';
       if (isCorrect) correctCount++;
+      play(isCorrect ? 'correct' : 'wrong');
       recordAnswer(question.itemId, isCorrect);
       feedback.className = `feedback feedback-${result}`;
       feedback.replaceChildren(createFeedback(result, question));
@@ -356,6 +358,12 @@ const RESULT_MESSAGES = {
   2: ['sweet', "So good! You're getting better every day 💕"],
   1: ['thinking', "Every try counts. Let's keep going together 🌱"],
 };
+
+// One rising note per star, timed with the stars popping in, then a chime if the streak grew.
+function playResultSounds(stars, streakGrew) {
+  for (let i = 0; i < stars; i++) play(`star${i + 1}`, 0.15 + i * 0.15);
+  if (streakGrew) play('streak', 0.25 + stars * 0.15);
+}
 
 function createResultGuide(stars) {
   const [mood, fallback] = RESULT_MESSAGES[stars];
@@ -448,7 +456,9 @@ export async function renderQuiz(dayParam) {
       stopSpeaking();
       const isRetake = getDayStatus(day) === 'completed';
       const stars = getStarsForScore(correct, questions.length);
+      const streakBefore = getStreak();
       const isSaved = completeLesson(day, stars);
+      playResultSounds(stars, getStreak() > streakBefore);
       const result = createResult(day, correct, questions.length, isRetake, isSaved, names, () => {
         start();
         (page.querySelector('[data-autofocus]') ?? page.querySelector('[tabindex="-1"]')).focus();

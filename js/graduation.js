@@ -3,6 +3,7 @@
 import { createFloaters, decorRow } from './decor.js';
 import { actions, buttonLink, element, link, persian } from './dom.js';
 import { createGuide, say } from './guide.js';
+import { play } from './sound.js';
 import { getTotalStars, hasGraduated, TOTAL_DAYS } from './state.js';
 
 export function renderGraduation() {
@@ -29,5 +30,6 @@ export function renderGraduation() {
     element('p', 'The Practice Arena stays open, so you can keep practicing whenever you like.'),
     actions(buttonLink('#/practice/mixed', 'Keep practicing 🎯', true), link('#/', 'Back to home')),
   );
+  play('graduation', 0.2);
   return [element('h1', 'Graduation 🎓'), page];
 }

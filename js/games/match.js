@@ -3,6 +3,7 @@
 import { element, link, persian } from '../dom.js';
 import { createGuide, say } from '../guide.js';
 import { replay } from '../motion.js';
+import { play } from '../sound.js';
 import { shuffled } from '../quiz.js';
 import { recordAnswer } from '../state.js';
 
@@ -82,6 +83,7 @@ export function createMatchGame(items, random = Math.random) {
       if (!isMatch) {
         misses++;
         message.textContent = '❌ Not a pair, try again';
+        play('wrong');
         replay(english.button, 'shake');
         replay(meaning.button, 'shake');
         return;
@@ -96,8 +98,13 @@ export function createMatchGame(items, random = Math.random) {
         button.textContent = `✅ ${pair[side]}`;
         replay(button, 'matched');
       }
-      if (matched === pairs.length) finish();
-      else game.querySelector('.match-board button:not(:disabled)').focus();
+      if (matched === pairs.length) {
+        play('matchDone');
+        finish();
+      } else {
+        play('pair');
+        game.querySelector('.match-board button:not(:disabled)').focus();
+      }
     }
 
     function finish() {

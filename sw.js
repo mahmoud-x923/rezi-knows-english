@@ -27,6 +27,7 @@ const FILES = [
   'js/practice.js',
   'js/quiz.js',
   'js/settings.js',
+  'js/sound.js',
   'js/speech.js',
   'js/state.js',
   'js/tabs.js',

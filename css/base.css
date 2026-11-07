@@ -602,28 +602,28 @@ input[type="text"]:focus {
   font-weight: 700;
 }
 
-.theme-choice {
+.choice {
   margin: 0 0 1rem;
   padding: 0;
   border: 0;
 }
 
-.theme-choice legend {
+.choice legend {
   margin-bottom: 0.4rem;
   padding: 0;
   font-weight: 700;
 }
 
-.theme-options {
+.choice-options {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--count, 3), minmax(0, 1fr));
   gap: 0.25rem;
   padding: 0.3rem;
   border-radius: 999px;
   background: var(--surface-soft);
 }
 
-.theme-options label {
+.choice-options label {
   position: relative;
   display: grid;
   place-items: center;
@@ -634,7 +634,7 @@ input[type="text"]:focus {
   cursor: pointer;
 }
 
-.theme-options input {
+.choice-options input {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -645,13 +645,13 @@ input[type="text"]:focus {
   cursor: pointer;
 }
 
-.theme-options label:has(input:checked) {
+.choice-options label:has(input:checked) {
   background: var(--surface);
   box-shadow: var(--shadow);
   color: var(--text);
 }
 
-.theme-options label:has(input:focus-visible) {
+.choice-options label:has(input:focus-visible) {
   outline: 3px solid var(--focus);
   outline-offset: 2px;
 }

@@ -1,8 +1,9 @@
-// The ⚙️ Settings menu: theme, and reset, export and import progress.
+// The ⚙️ Settings menu: theme, sounds, and reset, export and import progress.
 
 import { today } from './date.js';
 import { element } from './dom.js';
 import { exportProgress, importProgress, parseProgress, resetProgress } from './state.js';
+import { isSoundOn, setSoundOn } from './sound.js';
 import { getThemeChoice, setThemeChoice } from './theme.js';
 
 // Kept between renders, so the menu stays open and a message survives the update.
@@ -93,31 +94,36 @@ export function createSettings(onChange) {
 
   const body = element('div');
   body.className = 'settings-body';
-  body.append(createThemeChoice(), actions, message);
+  const themeChoice = createChoice('Theme', 'theme', [['system', 'System'], ['light', '☀️ Light'], ['dark', '🌙 Dark']],
+    getThemeChoice(), setThemeChoice);
+  const soundChoice = createChoice('Sounds', 'sound', [['on', '🔊 On'], ['off', '🔇 Off']],
+    isSoundOn() ? 'on' : 'off', (value) => setSoundOn(value === 'on'));
+  body.append(themeChoice, soundChoice, actions, message);
 
   menu.append(element('summary', '⚙️ Settings'), body);
   return menu;
 }
 
-function createThemeChoice() {
+// A row of pill-shaped options, such as System / Light / Dark.
+function createChoice(legend, name, choices, current, onChoose) {
   const group = element('fieldset');
-  group.className = 'theme-choice';
+  group.className = 'choice';
   const options = element('div');
-  options.className = 'theme-options';
-  const current = getThemeChoice();
+  options.className = 'choice-options';
 
-  for (const [value, label] of [['system', 'System'], ['light', '☀️ Light'], ['dark', '🌙 Dark']]) {
+  for (const [value, label] of choices) {
     const option = element('label', label);
     const input = element('input');
     input.type = 'radio';
-    input.name = 'theme';
+    input.name = name;
     input.value = value;
     input.checked = value === current;
-    input.addEventListener('change', () => setThemeChoice(value));
+    input.addEventListener('change', () => onChoose(value));
     option.append(input);
     options.append(option);
   }
 
-  group.append(element('legend', 'Theme'), options);
+  options.style.setProperty('--count', choices.length);
+  group.append(element('legend', legend), options);
   return group;
 }

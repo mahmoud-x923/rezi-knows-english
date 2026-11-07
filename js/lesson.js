@@ -4,6 +4,7 @@ import { loadLesson } from './data.js';
 import { actions, arabic, buttonLink, element, link, persian } from './dom.js';
 import { decorRow } from './decor.js';
 import { createGuide, say } from './guide.js';
+import { play } from './sound.js';
 import { isSpeechAvailable, speak, stopSpeaking } from './speech.js';
 import {
   canStartLesson,
@@ -156,6 +157,7 @@ function createLessonPage(title, day, label, isReview, lesson) {
   function show(index, moveFocus = true) {
     stopSpeaking();
     content.dataset.direction = index < shownIndex ? 'back' : 'forward';
+    if (index !== shownIndex) play('swish');
     shownIndex = index;
     const isEnd = index === cards.length;
     position.textContent = isEnd ? label : `${label} · Card ${index + 1} of ${cards.length}`;
