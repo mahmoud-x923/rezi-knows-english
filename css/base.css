@@ -282,6 +282,36 @@ input {
   margin-top: 1rem;
 }
 
+.match-board {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.match-board button {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  overflow-wrap: anywhere;
+  color: inherit;
+}
+
+.match-board button[aria-pressed="true"] {
+  font-weight: 700;
+  outline: 3px solid currentColor;
+  outline-offset: -3px;
+}
+
+.match-clock {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.match-message {
+  min-height: 1.5em;
+}
+
 .debug-panel {
   border-top: 1px solid currentColor;
 }

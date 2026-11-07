@@ -4,6 +4,7 @@ import { initDebugPanel } from './debug.js';
 import { renderGraduation } from './graduation.js';
 import { createHero } from './hero.js';
 import { renderLesson } from './lesson.js';
+import { renderPractice } from './practice.js';
 import { renderQuiz } from './quiz.js';
 import { stopSpeaking } from './speech.js';
 import { createTabs } from './tabs.js';
@@ -16,12 +17,22 @@ const app = document.querySelector('#app');
 // Days are limited to 1-30. Anything else counts as an unknown route.
 const DAY = '([1-9]|[12][0-9]|30)';
 
+const PRACTICE_TITLES = {
+  mixed: 'Mixed practice',
+  weak: 'Weak spots',
+  match: 'Match pairs',
+};
+
 const routes = [
   { pattern: /^\/$/, title: () => APP_NAME, render: renderHome },
   { pattern: /^\/lesson$/, title: () => "Today's lesson", render: () => renderLesson() },
   { pattern: new RegExp(`^/lesson/${DAY}$`), title: (day) => `Review Day ${day}`, render: renderLesson },
   { pattern: new RegExp(`^/quiz/${DAY}$`), title: (day) => `Quiz for Day ${day}`, render: renderQuiz },
-  { pattern: /^\/practice\/(mixed|weak|match)$/, title: (mode) => `Practice: ${mode}` },
+  {
+    pattern: /^\/practice\/(mixed|weak|match)$/,
+    title: (mode) => PRACTICE_TITLES[mode],
+    render: (mode) => renderPractice(mode, PRACTICE_TITLES[mode]),
+  },
   { pattern: /^\/graduation$/, title: () => 'Graduation', render: renderGraduation },
 ];
 

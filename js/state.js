@@ -117,12 +117,13 @@ export function getTotalStars() {
   return Object.values(read().completedDays).reduce((sum, { stars }) => sum + stars, 0);
 }
 
+// A correct answer takes one off the wrong count, so items leave Weak spots over time.
 export function recordAnswer(itemId, isCorrect) {
   const progress = read();
   const stats = progress.itemStats[itemId] ?? { seen: 0, wrong: 0 };
   progress.itemStats[itemId] = {
     seen: stats.seen + 1,
-    wrong: stats.wrong + (isCorrect ? 0 : 1),
+    wrong: isCorrect ? Math.max(0, stats.wrong - 1) : stats.wrong + 1,
   };
   write(progress);
 }

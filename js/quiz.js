@@ -31,7 +31,7 @@ function isVerb(item) {
   return 'base' in item;
 }
 
-function shuffled(list, random) {
+export function shuffled(list, random) {
   const copy = [...list];
   for (let i = copy.length - 1; i > 0; i--) {
     const j = Math.floor(random() * (i + 1));
@@ -119,7 +119,7 @@ const QUESTION_BUILDERS = {
 };
 
 // The listening question is skipped when the browser has no speech support.
-function typesFor(item) {
+export function typesFor(item) {
   if (!isVerb(item)) return ABBREVIATION_TYPES;
   return isSpeechAvailable() ? VERB_TYPES : VERB_TYPES.filter((type) => type !== 'listen');
 }
