@@ -1,6 +1,7 @@
 // The home page tabs: How It Works, My Journey and Practice Arena.
 
-import { element, link, persian } from './dom.js';
+import { buttonLink, element, link, persian } from './dom.js';
+import { createGuide } from './guide.js';
 import {
   canStartLesson,
   getCompletedDayCount,
@@ -23,9 +24,9 @@ const STEPS = [
 ];
 
 const PRACTICE_MODES = [
-  { href: '#/practice/mixed', label: 'Mixed' },
-  { href: '#/practice/weak', label: 'Weak spots' },
-  { href: '#/practice/match', label: 'Match pairs' },
+  { href: '#/practice/mixed', label: '🎲 Mixed' },
+  { href: '#/practice/weak', label: '💪 Weak spots' },
+  { href: '#/practice/match', label: '🧩 Match pairs' },
 ];
 
 const TABS = [
@@ -45,11 +46,14 @@ function renderHowItWorks() {
     return item;
   }));
 
-  return [
-    steps,
+  const note = element('div');
+  note.className = 'note';
+  note.append(
     element('p', 'One new lesson unlocks each day. After you finish it, you can take one bonus lesson the same day.'),
     persian('p', 'هر روز یک درس جدید باز می‌شود. بعد از تمام کردن آن، می‌توانی همان روز یک درس جایزه هم بخوانی.'),
-  ];
+  );
+
+  return [createGuide('listening', "Hi, I'm Curly! Here's how we'll learn together:"), steps, note];
 }
 
 function renderSummary() {
@@ -60,15 +64,20 @@ function renderSummary() {
   ];
   const summary = element('dl');
   summary.className = 'summary';
-  summary.append(...rows.flatMap(([term, value]) => [element('dt', term), element('dd', value)]));
+  summary.append(...rows.map(([term, value]) => {
+    const stat = element('div');
+    stat.className = 'stat';
+    stat.append(element('dt', term), element('dd', value));
+    return stat;
+  }));
   return summary;
 }
 
 function renderNextStep() {
-  if (hasGraduated()) return link('#/graduation', 'Graduation 🎓');
-  if (isBonusAvailable()) return link('#/lesson', 'Bonus lesson 🚀');
-  if (canStartLesson()) return link('#/lesson', "Start today's lesson");
-  return element('p', "You've finished today's lessons. See you tomorrow 👋");
+  if (hasGraduated()) return buttonLink('#/graduation', 'Graduation 🎓', true);
+  if (isBonusAvailable()) return buttonLink('#/lesson', 'Bonus lesson 🚀', true);
+  if (canStartLesson()) return buttonLink('#/lesson', "Start today's lesson", true);
+  return createGuide('sleepy', "You've finished today's lessons. See you tomorrow 👋");
 }
 
 function renderStop(day, completedDays) {
@@ -86,15 +95,21 @@ function renderJourney() {
   path.className = 'journey';
   for (let day = 1; day <= TOTAL_DAYS; day++) {
     const stop = element('li');
+    stop.className = `stop-${getDayStatus(day)}`;
+    stop.dataset.day = day;
     stop.append(renderStop(day, completedDays));
     path.append(stop);
   }
-  return [renderSummary(), renderNextStep(), path];
+  const nextStep = element('div');
+  nextStep.className = 'next-step';
+  nextStep.append(renderNextStep());
+  return [renderSummary(), nextStep, path];
 }
 
 function renderPractice() {
   const isUnlocked = getCompletedDayCount() > 0;
   const modes = element('ul');
+  modes.className = 'practice-modes';
   modes.append(...PRACTICE_MODES.map(({ href, label }) => {
     const item = element('li');
     if (isUnlocked) {
@@ -109,8 +124,8 @@ function renderPractice() {
   }));
 
   return isUnlocked
-    ? [element('p', 'Practice everything you have learned so far.'), modes]
-    : [element('p', 'Finish Day 1 and your practice games will open here 🎯'), modes];
+    ? [createGuide('cozy', 'Practice everything you have learned so far.'), modes]
+    : [createGuide('sleepy', 'Finish Day 1 and your practice games will open here 🎯'), modes];
 }
 
 export function createTabs() {

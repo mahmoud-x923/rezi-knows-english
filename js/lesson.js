@@ -1,7 +1,8 @@
 // The lesson pages: today's lesson and reviewing a completed day.
 
 import { loadLesson } from './data.js';
-import { arabic, element, link, persian } from './dom.js';
+import { actions, arabic, buttonLink, element, link, persian } from './dom.js';
+import { createGuide } from './guide.js';
 import { isSpeechAvailable, speak, stopSpeaking } from './speech.js';
 import {
   canStartLesson,
@@ -75,12 +76,10 @@ function createVerbCard(verb) {
     createFormRow('Past participle', verb.participle, verb.examples.participle),
   );
 
-  card.append(
-    heading,
-    createMeanings(verb),
-    rows,
-    element('p', `Pattern ${verb.pattern}: ${main.join(' / ')}`),
-  );
+  const pattern = element('p', `Pattern ${verb.pattern}: ${main.join(' / ')}`);
+  pattern.className = 'pattern';
+
+  card.append(heading, createMeanings(verb), rows, pattern);
   return card;
 }
 
@@ -95,12 +94,12 @@ function createAbbreviationCard(item) {
   const bubble = element('p', item.example);
   bubble.className = 'chat-bubble';
 
-  card.append(
-    element('h2', item.short),
-    full,
-    createMeanings(item),
-    element('p', CONTEXT_NOTES[item.context]),
-  );
+  const heading = element('h2', item.short);
+  heading.className = 'abbreviation-short';
+  const context = element('p', CONTEXT_NOTES[item.context]);
+  context.className = 'context-note';
+
+  card.append(heading, full, createMeanings(item), context);
   if (item.tone === 'rude') {
     const warning = element('p', '🌶️ Mildly rude. OK with close friends, never at work.');
     warning.className = 'rude-warning';
@@ -116,12 +115,15 @@ function createEndScreen(day, isReview) {
   if (isReview) {
     screen.append(
       element('h2', `That's all for Day ${day} 👏`),
-      link(`#/quiz/${day}`, 'Retake the quiz'),
-      element('br'),
-      link(HOME, 'Back to home'),
+      createGuide('proud', 'Nice review! Want to try the quiz again?'),
+      actions(buttonLink(`#/quiz/${day}`, 'Retake the quiz', true), link(HOME, 'Back to home')),
     );
   } else {
-    screen.append(element('h2', 'Ready for your quiz?'), link(`#/quiz/${day}`, 'Start the quiz'));
+    screen.append(
+      element('h2', 'Ready for your quiz?'),
+      createGuide('proud', 'You went through all 5 cards. I know you can do this!'),
+      actions(buttonLink(`#/quiz/${day}`, 'Start the quiz', true)),
+    );
   }
   return screen;
 }
@@ -139,6 +141,10 @@ function createLessonPage(title, day, label, isReview, lesson) {
     ...lesson.abbreviations.map(createAbbreviationCard),
   ];
   const position = element('p');
+  position.className = 'lesson-position';
+  const dots = element('div');
+  dots.className = 'progress-dots';
+  dots.setAttribute('aria-hidden', 'true');
   const content = element('div');
   content.tabIndex = -1;
   const nav = element('div');
@@ -148,36 +154,54 @@ function createLessonPage(title, day, label, isReview, lesson) {
     stopSpeaking();
     const isEnd = index === cards.length;
     position.textContent = isEnd ? label : `${label} · Card ${index + 1} of ${cards.length}`;
+    dots.replaceChildren(...cards.map((card, dot) => {
+      const node = element('span');
+      if (dot < index) node.className = 'done';
+      if (dot === index) node.className = 'current';
+      return node;
+    }));
     content.replaceChildren(isEnd ? createEndScreen(day, isReview) : cards[index]);
     const buttons = [];
     if (index > 0) buttons.push(navButton('Back', () => show(index - 1)));
-    if (!isEnd) buttons.push(navButton('Next', () => show(index + 1)));
+    if (!isEnd) {
+      const next = navButton('Next', () => show(index + 1));
+      next.className = 'button-primary';
+      buttons.push(next);
+    }
     nav.replaceChildren(...buttons);
     if (moveFocus) content.focus();
   }
 
   show(0, false);
-  return [element('h1', title), position, content, nav, link(HOME, 'Exit lesson')];
+  const exit = link(HOME, 'Exit lesson');
+  exit.className = 'exit-link';
+  return [element('h1', title), position, dots, content, nav, exit];
 }
 
 function renderNoLesson() {
-  const message = hasGraduated()
-    ? element('p', "You've finished all 30 days 🎓")
-    : element('p', "You've finished today's lessons. See you tomorrow 👋");
-  const next = hasGraduated() ? link('#/graduation', 'Graduation 🎓') : link(HOME, 'Back to home');
-  return [element('h1', "Today's lesson"), message, next];
+  if (hasGraduated()) {
+    return [
+      element('h1', "Today's lesson"),
+      createGuide('cheer', "You've finished all 30 days 🎓"),
+      actions(buttonLink('#/graduation', 'Graduation 🎓', true)),
+    ];
+  }
+  return [
+    element('h1', "Today's lesson"),
+    createGuide('sleepy', "You've finished today's lessons. See you tomorrow 👋"),
+    actions(buttonLink(HOME, 'Back to home')),
+  ];
 }
 
 export function renderLoadError(title) {
   const retry = element('button', 'Try again');
   retry.type = 'button';
+  retry.className = 'button-primary';
   retry.addEventListener('click', () => location.reload());
   return [
     element('h1', title),
-    element('p', "This page couldn't load. Check your connection and try again."),
-    retry,
-    element('br'),
-    link(HOME, 'Back to home'),
+    createGuide('thinking', "This page couldn't load. Check your connection and try again."),
+    actions(retry, link(HOME, 'Back to home')),
   ];
 }
 

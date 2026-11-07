@@ -1,6 +1,8 @@
 // The home page hero: a greeting picked at random on every page load.
 
 import { loadGreetings, loadNames } from './data.js';
+import { element } from './dom.js';
+import { createGuide } from './guide.js';
 import { getNextDay, getStreak, TOTAL_DAYS } from './state.js';
 
 const APP_NAME = 'Rezi Knows English';
@@ -73,14 +75,8 @@ async function getGreeting() {
 }
 
 export async function createHero() {
-  const hero = document.createElement('header');
-
-  const heading = document.createElement('h1');
-  heading.textContent = APP_NAME;
-
-  const greeting = document.createElement('p');
-  greeting.textContent = await getGreeting();
-
-  hero.append(heading, greeting);
+  const hero = element('header');
+  hero.className = 'hero';
+  hero.append(element('h1', APP_NAME), createGuide('welcome', await getGreeting()));
   return hero;
 }

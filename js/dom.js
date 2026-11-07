@@ -12,6 +12,21 @@ export function link(href, text) {
   return node;
 }
 
+// A link that looks like a button. Pass true for the main action on a screen.
+export function buttonLink(href, text, isPrimary = false) {
+  const node = link(href, text);
+  node.className = isPrimary ? 'button button-primary' : 'button';
+  return node;
+}
+
+// A column of actions, such as buttons and links at the end of a screen.
+export function actions(...children) {
+  const node = element('div');
+  node.className = 'actions';
+  node.append(...children);
+  return node;
+}
+
 function rtl(lang, tag, text) {
   const node = element(tag, text);
   node.lang = lang;

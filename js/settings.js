@@ -1,8 +1,9 @@
-// The ⚙️ Settings menu: reset, export and import progress.
+// The ⚙️ Settings menu: theme, and reset, export and import progress.
 
 import { today } from './date.js';
 import { element } from './dom.js';
 import { exportProgress, importProgress, parseProgress, resetProgress } from './state.js';
+import { getThemeChoice, setThemeChoice } from './theme.js';
 
 // Kept between renders, so the menu stays open and a message survives the update.
 let isOpen = false;
@@ -46,6 +47,7 @@ export function createSettings(onChange) {
   });
 
   const message = element('p', pendingMessage);
+  message.className = 'settings-message';
   message.setAttribute('aria-live', 'polite');
   pendingMessage = '';
 
@@ -89,6 +91,33 @@ export function createSettings(onChange) {
   actions.className = 'settings-actions';
   actions.append(download, importLabel, reset);
 
-  menu.append(element('summary', '⚙️ Settings'), actions, message);
+  const body = element('div');
+  body.className = 'settings-body';
+  body.append(createThemeChoice(), actions, message);
+
+  menu.append(element('summary', '⚙️ Settings'), body);
   return menu;
+}
+
+function createThemeChoice() {
+  const group = element('fieldset');
+  group.className = 'theme-choice';
+  const options = element('div');
+  options.className = 'theme-options';
+  const current = getThemeChoice();
+
+  for (const [value, label] of [['system', 'System'], ['light', '☀️ Light'], ['dark', '🌙 Dark']]) {
+    const option = element('label', label);
+    const input = element('input');
+    input.type = 'radio';
+    input.name = 'theme';
+    input.value = value;
+    input.checked = value === current;
+    input.addEventListener('change', () => setThemeChoice(value));
+    option.append(input);
+    options.append(option);
+  }
+
+  group.append(element('legend', 'Theme'), options);
+  return group;
 }

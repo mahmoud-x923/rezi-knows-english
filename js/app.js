@@ -9,6 +9,7 @@ import { renderQuiz } from './quiz.js';
 import { createSettings } from './settings.js';
 import { stopSpeaking } from './speech.js';
 import { createTabs } from './tabs.js';
+import { applyTheme } from './theme.js';
 
 const APP_NAME = 'Rezi Knows English';
 const HOME = '#/';
@@ -91,6 +92,7 @@ window.addEventListener('hashchange', () => {
   app.focus();
 });
 
+applyTheme();
 render();
 initDebugPanel(render);
 

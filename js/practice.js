@@ -1,8 +1,9 @@
 // Practice Arena sessions: Mixed, Weak spots and Match pairs.
 
 import { loadQuizContent } from './data.js';
-import { element, link } from './dom.js';
+import { actions, buttonLink, element, link } from './dom.js';
 import { createMatchGame } from './games/match.js';
+import { createGuide } from './guide.js';
 import { renderLoadError } from './lesson.js';
 import { createQuestion, createQuizRunner, shuffled, typesFor } from './quiz.js';
 import { stopSpeaking } from './speech.js';
@@ -42,22 +43,26 @@ function createPracticeResult(correct, total, onAgain) {
 
   const again = element('button', 'Practice again');
   again.type = 'button';
+  again.className = 'button-primary';
   again.addEventListener('click', onAgain);
 
-  const actions = element('div');
-  actions.className = 'result-actions';
-  actions.append(again, link(HOME, 'Back to home'));
+  const buttons = element('div');
+  buttons.className = 'result-actions';
+  buttons.append(again, link(HOME, 'Back to home'));
 
-  result.append(element('h2', `You got ${correct} of ${total} right`), actions);
+  const message = correct === total ? 'Every single one! 🙌' : 'Practice makes it stick. Well done 💕';
+  result.append(
+    element('h2', `You got ${correct} of ${total} right`),
+    createGuide(correct === total ? 'cheer' : 'sweet', message),
+    buttons,
+  );
   return result;
 }
 
 function renderNoWeakSpots() {
   return [
-    element('p', 'No weak spots yet. Keep it up 💪'),
-    link('#/practice/mixed', 'Try mixed practice'),
-    element('br'),
-    link(HOME, 'Back to home'),
+    createGuide('cheer', 'No weak spots yet. Keep it up 💪'),
+    actions(buttonLink('#/practice/mixed', 'Try mixed practice', true), link(HOME, 'Back to home')),
   ];
 }
 
@@ -75,7 +80,9 @@ function createQuizSession(getQuestions) {
       page.replaceChildren(result);
       result.focus();
     });
-    page.replaceChildren(...runner, link(HOME, 'Exit practice'));
+    const exit = link(HOME, 'Exit practice');
+    exit.className = 'exit-link';
+    page.replaceChildren(...runner, exit);
   }
 
   start();

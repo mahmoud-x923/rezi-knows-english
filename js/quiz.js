@@ -1,7 +1,8 @@
 // The quiz engine: question generators, the question flow and the result screen.
 
 import { loadNames, loadQuizContent } from './data.js';
-import { element, link, persian } from './dom.js';
+import { buttonLink, element, link, persian } from './dom.js';
+import { createGuide } from './guide.js';
 import { pickNickname } from './hero.js';
 import { renderLoadError } from './lesson.js';
 import { isSpeechAvailable, speak, stopSpeaking } from './speech.js';
@@ -193,11 +194,14 @@ function createFeedback(result, question) {
     almost: '🤏 Almost! check the spelling',
     wrong: '❌ Not quite',
   };
-  return [
-    element('p', headings[result]),
-    element('p', `Answer: ${question.answers.join(' / ')}`),
+  const heading = element('p', headings[result]);
+  heading.className = 'feedback-result';
+  return createGuide(
+    result === 'correct' ? 'proud' : 'thinking',
+    heading,
+    `Answer: ${question.answers.join(' / ')}`,
     persian('p', question.meaning),
-  ];
+  );
 }
 
 function createPrompt(question) {
@@ -240,9 +244,15 @@ function createOptions(question, onAnswer) {
       buttons.forEach((other) => {
         other.disabled = true;
         const value = question.options[buttons.indexOf(other)];
-        if (question.answers.includes(value)) other.textContent = `✅ ${value}`;
+        if (question.answers.includes(value)) {
+          other.textContent = `✅ ${value}`;
+          other.classList.add('is-correct');
+        }
       });
-      if (!isCorrect) button.textContent = `❌ ${option}`;
+      if (!isCorrect) {
+        button.textContent = `❌ ${option}`;
+        button.classList.add('is-wrong');
+      }
       onAnswer(isCorrect ? 'correct' : 'wrong');
     });
     return button;
@@ -282,6 +292,12 @@ function createTypedAnswer(question, onAnswer) {
 // Runs through the questions, then calls onFinish with the number answered correctly.
 export function createQuizRunner(questions, onFinish) {
   const position = element('p');
+  position.className = 'lesson-position';
+  const bar = element('div');
+  bar.className = 'progress-bar';
+  bar.setAttribute('aria-hidden', 'true');
+  const filled = element('span');
+  bar.append(filled);
   const content = element('div');
   content.tabIndex = -1;
   let correctCount = 0;
@@ -290,11 +306,13 @@ export function createQuizRunner(questions, onFinish) {
     stopSpeaking();
     const question = questions[index];
     position.textContent = `Question ${index + 1} of ${questions.length}`;
+    filled.style.width = `${((index + 1) / questions.length) * 100}%`;
 
     const feedback = element('div');
     feedback.className = 'feedback';
     feedback.setAttribute('aria-live', 'polite');
     const next = element('div');
+    next.className = 'feedback-next';
 
     const answerArea = question.options
       ? createOptions(question, handleAnswer)
@@ -304,7 +322,8 @@ export function createQuizRunner(questions, onFinish) {
       const isCorrect = result === 'correct';
       if (isCorrect) correctCount++;
       recordAnswer(question.itemId, isCorrect);
-      feedback.replaceChildren(...createFeedback(result, question));
+      feedback.className = `feedback feedback-${result}`;
+      feedback.replaceChildren(createFeedback(result, question));
 
       const isLast = index === questions.length - 1;
       const button = element('button', isLast ? 'See my result' : 'Next question');
@@ -323,15 +342,22 @@ export function createQuizRunner(questions, onFinish) {
   }
 
   show(0, false);
-  return [position, content];
+  return [position, bar, content];
 }
 
+const RESULT_MESSAGES = {
+  3: ['cheer', "Perfect! I'm so proud of you 🙌"],
+  2: ['sweet', "So good! You're getting better every day 💕"],
+  1: ['thinking', "Every try counts. Let's keep going together 🌱"],
+};
+
+// The main next action, or a goodbye from Curly when today's lessons are done.
 function renderNextStep(isRetake, names) {
-  if (hasGraduated()) return link('#/graduation', 'Graduation 🎓');
+  if (hasGraduated()) return buttonLink('#/graduation', 'Graduation 🎓', true);
   if (isRetake) return null;
-  if (isBonusAvailable()) return link('#/lesson', 'Bonus lesson 🚀');
-  if (canStartLesson()) return link('#/lesson', "Start today's lesson");
-  return element('p', names ? `See you tomorrow, ${pickNickname(names)} 👋` : 'See you tomorrow 👋');
+  if (isBonusAvailable()) return buttonLink('#/lesson', 'Bonus lesson 🚀', true);
+  if (canStartLesson()) return buttonLink('#/lesson', "Start today's lesson", true);
+  return createGuide('sleepy', names ? `See you tomorrow, ${pickNickname(names)} 👋` : 'See you tomorrow 👋');
 }
 
 function createResult(day, correct, total, isRetake, isSaved, names, onRetake) {
@@ -344,19 +370,24 @@ function createResult(day, correct, total, isRetake, isSaved, names, onRetake) {
   const heading = element('h2', `You got ${correct} of ${total} right`);
   const earned = element('p', '⭐'.repeat(stars));
   earned.className = 'result-stars';
-  result.append(heading, earned);
+  result.append(heading, earned, createGuide(...RESULT_MESSAGES[stars]));
 
   if (isRetake && best > stars) result.append(element('p', `Your best for this day: ${'⭐'.repeat(best)}`));
   if (!isSaved) result.append(element('p', "You've reached today's lesson limit, so this result wasn't saved."));
-  result.append(element('p', `🔥 Streak: ${getStreak()}`));
+  const streak = element('p', `🔥 Streak: ${getStreak()}`);
+  streak.className = 'result-streak';
+  result.append(streak);
 
   const nextStep = isSaved ? renderNextStep(isRetake, names) : null;
-  if (nextStep) result.append(nextStep);
+  const isGoodbye = nextStep?.classList.contains('guide');
+  if (isGoodbye) result.append(nextStep);
 
   const actions = element('div');
   actions.className = 'result-actions';
+  if (nextStep && !isGoodbye) actions.append(nextStep);
   const retake = element('button', 'Retake the quiz');
   retake.type = 'button';
+  if (!nextStep || isGoodbye) retake.className = 'button-primary';
   retake.addEventListener('click', onRetake);
   actions.append(retake, link(HOME, 'Back to home'));
   result.append(actions);
@@ -385,6 +416,7 @@ export async function renderQuiz(dayParam) {
   function start() {
     const questions = generateDailyQuiz(content, getProgress().itemStats);
     const exit = link(HOME, 'Exit quiz');
+    exit.className = 'exit-link';
     const runner = createQuizRunner(questions, (correct) => {
       stopSpeaking();
       const isRetake = getDayStatus(day) === 'completed';
