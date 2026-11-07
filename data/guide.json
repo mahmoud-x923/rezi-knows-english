@@ -1,0 +1,105 @@
+{
+  "howItWorks": [
+    "Hi {{nickname}}, I'm Curly! Here's how we'll learn together:",
+    "Hey {{name}}! It's Curly. Here's our little plan:",
+    "Hi! Curly here, and I'll be with you every step. This is how it works:"
+  ],
+  "lessonEnd": [
+    "You went through all 5 cards. I know you can do this!",
+    "All 5 cards done! Quiz time, {{nickname}} 💪",
+    "That was great. Let's see what stuck!"
+  ],
+  "reviewEnd": [
+    "Nice review! Want to try the quiz again?",
+    "Reviewing is so smart, {{nickname}} 💕",
+    "Look at you, practicing on your own ✨"
+  ],
+  "correct": [
+    "Yay, you got it!",
+    "That's my {{nickname}}! 💕",
+    "So smart ✨",
+    "Perfect!",
+    "You're on fire 🔥"
+  ],
+  "almost": [
+    "So close! Just one letter off.",
+    "Almost there, {{nickname}}. Check the spelling 🧐",
+    "Nearly perfect! Spelling is tricky."
+  ],
+  "wrong": [
+    "That's okay, now you know it 💕",
+    "Don't worry, {{nickname}}. We learn from these.",
+    "Tricky one! You'll get it next time.",
+    "No stress, I'm still proud of you."
+  ],
+  "result3": [
+    "Perfect! I'm so proud of you 🙌",
+    "Three stars, {{nickname}}! You're amazing ⭐",
+    "Wow, look at you go! 🙌"
+  ],
+  "result2": [
+    "So good! You're getting better every day 💕",
+    "Great job, {{nickname}}! Almost perfect.",
+    "Two stars! I knew you could do it 💕"
+  ],
+  "result1": [
+    "Every try counts. Let's keep going together 🌱",
+    "You finished it, {{nickname}}, and that's what matters 💕",
+    "Practice makes it stick. I'm right here with you."
+  ],
+  "seeYouTomorrow": [
+    "Sleep well 🌙",
+    "I'll be waiting for you 💕",
+    "Rest your brain, you earned it ✨"
+  ],
+  "dailyLimit": [
+    "Your brain needs a little rest now 🌙",
+    "Come back tomorrow and we'll learn more together 💕",
+    "Good job today, {{nickname}}!"
+  ],
+  "practiceLocked": [
+    "I'll be waiting here 🧋",
+    "Let's do your first lesson together!"
+  ],
+  "practiceOpen": [
+    "Want to play a little, {{nickname}}? 🧋",
+    "A bit of practice keeps it fresh ✨",
+    "Pick a game, I'll keep you company 💕"
+  ],
+  "practicePerfect": [
+    "Every single one! 🙌",
+    "Perfect practice, {{nickname}}! ✨"
+  ],
+  "practiceDone": [
+    "Practice makes it stick. Well done 💕",
+    "Nice work, {{nickname}}! Want another round?"
+  ],
+  "matchIntro": [
+    "Let's see how fast you can match them 🧋",
+    "Ready, {{nickname}}? Go! ⏱️"
+  ],
+  "matchPerfect": [
+    "Not a single miss! 🙌",
+    "Flawless, {{nickname}}! ✨"
+  ],
+  "matchDone": [
+    "You matched them all 💕",
+    "Done! Want to beat your time?"
+  ],
+  "noWeakSpots": [
+    "You're doing amazing, {{nickname}} ✨",
+    "Nothing to fix right now. So proud of you 💕"
+  ],
+  "loadError": [
+    "Don't worry, it's not you!",
+    "Let's try again in a moment 💕"
+  ],
+  "graduation": [
+    "I'm so proud of you, {{nickname}} 💕",
+    "You did it, {{name}}! I knew you would 🙌"
+  ],
+  "rude": [
+    "Careful with this one! Only with close friends 😤",
+    "Don't let me hear you say this at work, {{nickname}} 😤"
+  ]
+}

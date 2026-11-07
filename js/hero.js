@@ -1,8 +1,10 @@
 // The home page hero: a greeting picked at random on every page load.
 
 import { loadGreetings, loadNames } from './data.js';
+import { decor } from './decor.js';
 import { element } from './dom.js';
 import { createGuide } from './guide.js';
+import { fillPlaceholders, getNameValues } from './names.js';
 import { getNextDay, getStreak, TOTAL_DAYS } from './state.js';
 
 const APP_NAME = 'Rezi Knows English';
@@ -11,30 +13,10 @@ const NEAR_GRADUATION_DAYS = 5;
 
 let greetingForThisLoad = null;
 
-export function pickNickname(names, random = Math.random) {
-  return names.nicknames[Math.floor(random() * names.nicknames.length)];
-}
-
-// The values greetings can use. Each call picks a nickname at random.
-export function getNameValues(names, random = Math.random) {
-  return { name: names.name, fullName: names.fullName, nickname: pickNickname(names, random) };
-}
-
 export function getTimeOfDay(hour) {
   if (hour >= 5 && hour < 12) return 'morning';
   if (hour >= 12 && hour < 17) return 'afternoon';
   return 'evening';
-}
-
-// Returns the text with placeholders filled, or null if a value is missing.
-function fillPlaceholders(text, values) {
-  let isComplete = true;
-  const filled = text.replace(/\{\{(\w+)\}\}/g, (placeholder, name) => {
-    if (values[name]) return values[name];
-    isComplete = false;
-    return placeholder;
-  });
-  return isComplete ? filled : null;
 }
 
 function conditionsMatch(greeting, context) {
@@ -77,6 +59,10 @@ async function getGreeting() {
 export async function createHero() {
   const hero = element('header');
   hero.className = 'hero';
-  hero.append(element('h1', APP_NAME), createGuide('welcome', await getGreeting()));
+  const heading = element('h1', APP_NAME);
+  heading.append(decor('sparkle', 'hero-sparkle'), decor('heart', 'hero-heart'));
+  const guide = createGuide('welcome', await getGreeting());
+  guide.classList.add('guide-large');
+  hero.append(heading, guide);
   return hero;
 }

@@ -2,8 +2,8 @@
 
 import { loadNames, loadQuizContent } from './data.js';
 import { buttonLink, element, link, persian } from './dom.js';
-import { createGuide } from './guide.js';
-import { pickNickname } from './hero.js';
+import { createGuide, say } from './guide.js';
+import { pickNickname } from './names.js';
 import { renderLoadError } from './lesson.js';
 import { isSpeechAvailable, speak, stopSpeaking } from './speech.js';
 import {
@@ -199,6 +199,7 @@ function createFeedback(result, question) {
   return createGuide(
     result === 'correct' ? 'proud' : 'thinking',
     heading,
+    say(result),
     `Answer: ${question.answers.join(' / ')}`,
     persian('p', question.meaning),
   );
@@ -351,13 +352,24 @@ const RESULT_MESSAGES = {
   1: ['thinking', "Every try counts. Let's keep going together 🌱"],
 };
 
+function createResultGuide(stars) {
+  const [mood, fallback] = RESULT_MESSAGES[stars];
+  const guide = createGuide(mood, say(`result${stars}`) ?? fallback);
+  if (stars === 3) guide.classList.add('guide-large');
+  return guide;
+}
+
 // The main next action, or a goodbye from Curly when today's lessons are done.
 function renderNextStep(isRetake, names) {
   if (hasGraduated()) return buttonLink('#/graduation', 'Graduation 🎓', true);
   if (isRetake) return null;
   if (isBonusAvailable()) return buttonLink('#/lesson', 'Bonus lesson 🚀', true);
   if (canStartLesson()) return buttonLink('#/lesson', "Start today's lesson", true);
-  return createGuide('sleepy', names ? `See you tomorrow, ${pickNickname(names)} 👋` : 'See you tomorrow 👋');
+  return createGuide(
+    'sleepy',
+    names ? `See you tomorrow, ${pickNickname(names)} 👋` : 'See you tomorrow 👋',
+    say('seeYouTomorrow'),
+  );
 }
 
 function createResult(day, correct, total, isRetake, isSaved, names, onRetake) {
@@ -370,7 +382,7 @@ function createResult(day, correct, total, isRetake, isSaved, names, onRetake) {
   const heading = element('h2', `You got ${correct} of ${total} right`);
   const earned = element('p', '⭐'.repeat(stars));
   earned.className = 'result-stars';
-  result.append(heading, earned, createGuide(...RESULT_MESSAGES[stars]));
+  result.append(heading, earned, createResultGuide(stars));
 
   if (isRetake && best > stars) result.append(element('p', `Your best for this day: ${'⭐'.repeat(best)}`));
   if (!isSaved) result.append(element('p', "You've reached today's lesson limit, so this result wasn't saved."));

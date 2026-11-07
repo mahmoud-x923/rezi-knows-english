@@ -3,7 +3,8 @@
 import { loadQuizContent } from './data.js';
 import { actions, buttonLink, element, link } from './dom.js';
 import { createMatchGame } from './games/match.js';
-import { createGuide } from './guide.js';
+import { decorRow } from './decor.js';
+import { createGuide, say } from './guide.js';
 import { renderLoadError } from './lesson.js';
 import { createQuestion, createQuizRunner, shuffled, typesFor } from './quiz.js';
 import { stopSpeaking } from './speech.js';
@@ -50,10 +51,13 @@ function createPracticeResult(correct, total, onAgain) {
   buttons.className = 'result-actions';
   buttons.append(again, link(HOME, 'Back to home'));
 
-  const message = correct === total ? 'Every single one! 🙌' : 'Practice makes it stick. Well done 💕';
+  const isPerfect = correct === total;
+  const message = isPerfect
+    ? say('practicePerfect') ?? 'Every single one! 🙌'
+    : say('practiceDone') ?? 'Practice makes it stick. Well done 💕';
   result.append(
     element('h2', `You got ${correct} of ${total} right`),
-    createGuide(correct === total ? 'cheer' : 'sweet', message),
+    createGuide(isPerfect ? 'cheer' : 'sweet', message),
     buttons,
   );
   return result;
@@ -61,7 +65,8 @@ function createPracticeResult(correct, total, onAgain) {
 
 function renderNoWeakSpots() {
   return [
-    createGuide('cheer', 'No weak spots yet. Keep it up 💪'),
+    decorRow('sparkle', 'heart', 'sparkle'),
+    createGuide('cheer', 'No weak spots yet. Keep it up 💪', say('noWeakSpots')),
     actions(buttonLink('#/practice/mixed', 'Try mixed practice', true), link(HOME, 'Back to home')),
   ];
 }

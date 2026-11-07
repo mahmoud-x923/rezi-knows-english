@@ -243,17 +243,59 @@ input[type="text"]:focus {
 }
 
 .guide-sticker {
-  display: grid;
   flex: none;
-  place-items: center;
-  width: 64px;
-  height: 64px;
-  border: 3px solid var(--surface);
-  border-radius: 50%;
-  background: var(--surface-lavender);
-  box-shadow: var(--shadow);
-  font-size: 2rem;
-  line-height: 1;
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(58, 35, 64, 0.18));
+}
+
+.guide-large .guide-sticker {
+  width: 104px;
+  height: 104px;
+}
+
+/* ---------- Decorations ---------- */
+
+.decor {
+  display: inline-block;
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: var(--path);
+  stroke: var(--path);
+  vertical-align: middle;
+}
+
+.decor-heart {
+  fill: var(--primary);
+  stroke: none;
+}
+
+.decor-sparkle,
+.decor-moon {
+  fill: var(--lavender-text);
+  stroke: none;
+}
+
+.decor-cloud {
+  width: 1.6rem;
+  fill: var(--surface-lavender);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.decor-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.25rem 0 0.75rem;
+}
+
+.hero h1 .decor {
+  margin-left: 0.3rem;
+  width: 1rem;
+  height: 1rem;
 }
 
 .guide-bubble {

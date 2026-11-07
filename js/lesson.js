@@ -2,7 +2,8 @@
 
 import { loadLesson } from './data.js';
 import { actions, arabic, buttonLink, element, link, persian } from './dom.js';
-import { createGuide } from './guide.js';
+import { decorRow } from './decor.js';
+import { createGuide, say } from './guide.js';
 import { isSpeechAvailable, speak, stopSpeaking } from './speech.js';
 import {
   canStartLesson,
@@ -103,7 +104,7 @@ function createAbbreviationCard(item) {
   if (item.tone === 'rude') {
     const warning = element('p', '🌶️ Mildly rude. OK with close friends, never at work.');
     warning.className = 'rude-warning';
-    card.append(warning);
+    card.append(warning, createGuide('pouting', say('rude') ?? 'Careful with this one! 😤'));
   }
   card.append(bubble);
   return card;
@@ -115,13 +116,13 @@ function createEndScreen(day, isReview) {
   if (isReview) {
     screen.append(
       element('h2', `That's all for Day ${day} 👏`),
-      createGuide('proud', 'Nice review! Want to try the quiz again?'),
+      createGuide('proud', say('reviewEnd') ?? 'Nice review! Want to try the quiz again?'),
       actions(buttonLink(`#/quiz/${day}`, 'Retake the quiz', true), link(HOME, 'Back to home')),
     );
   } else {
     screen.append(
       element('h2', 'Ready for your quiz?'),
-      createGuide('proud', 'You went through all 5 cards. I know you can do this!'),
+      createGuide('proud', say('lessonEnd') ?? 'You went through all 5 cards. I know you can do this!'),
       actions(buttonLink(`#/quiz/${day}`, 'Start the quiz', true)),
     );
   }
@@ -188,7 +189,8 @@ function renderNoLesson() {
   }
   return [
     element('h1', "Today's lesson"),
-    createGuide('sleepy', "You've finished today's lessons. See you tomorrow 👋"),
+    decorRow('moon', 'star', 'sparkle'),
+    createGuide('sleepy', "You've finished today's lessons. See you tomorrow 👋", say('dailyLimit')),
     actions(buttonLink(HOME, 'Back to home')),
   ];
 }
@@ -200,7 +202,7 @@ export function renderLoadError(title) {
   retry.addEventListener('click', () => location.reload());
   return [
     element('h1', title),
-    createGuide('thinking', "This page couldn't load. Check your connection and try again."),
+    createGuide('thinking', "This page couldn't load. Check your connection and try again.", say('loadError')),
     actions(retry, link(HOME, 'Back to home')),
   ];
 }

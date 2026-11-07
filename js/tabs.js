@@ -1,7 +1,8 @@
 // The home page tabs: How It Works, My Journey and Practice Arena.
 
 import { buttonLink, element, link, persian } from './dom.js';
-import { createGuide } from './guide.js';
+import { decorRow } from './decor.js';
+import { createGuide, say } from './guide.js';
 import {
   canStartLesson,
   getCompletedDayCount,
@@ -53,7 +54,9 @@ function renderHowItWorks() {
     persian('p', 'هر روز یک درس جدید باز می‌شود. بعد از تمام کردن آن، می‌توانی همان روز یک درس جایزه هم بخوانی.'),
   );
 
-  return [createGuide('listening', "Hi, I'm Curly! Here's how we'll learn together:"), steps, note];
+  const guide = createGuide('listening', say('howItWorks') ?? "Hi, I'm Curly! Here's how we'll learn together:");
+  guide.classList.add('guide-large');
+  return [guide, steps, note];
 }
 
 function renderSummary() {
@@ -77,7 +80,7 @@ function renderNextStep() {
   if (hasGraduated()) return buttonLink('#/graduation', 'Graduation 🎓', true);
   if (isBonusAvailable()) return buttonLink('#/lesson', 'Bonus lesson 🚀', true);
   if (canStartLesson()) return buttonLink('#/lesson', "Start today's lesson", true);
-  return createGuide('sleepy', "You've finished today's lessons. See you tomorrow 👋");
+  return createGuide('sleepy', "You've finished today's lessons. See you tomorrow 👋", say('dailyLimit'));
 }
 
 function renderStop(day, completedDays) {
@@ -103,7 +106,7 @@ function renderJourney() {
   const nextStep = element('div');
   nextStep.className = 'next-step';
   nextStep.append(renderNextStep());
-  return [renderSummary(), nextStep, path];
+  return [renderSummary(), nextStep, decorRow('cloud', 'sparkle', 'cloud'), path, decorRow('star', 'heart', 'star')];
 }
 
 function renderPractice() {
@@ -124,8 +127,8 @@ function renderPractice() {
   }));
 
   return isUnlocked
-    ? [createGuide('cozy', 'Practice everything you have learned so far.'), modes]
-    : [createGuide('sleepy', 'Finish Day 1 and your practice games will open here 🎯'), modes];
+    ? [createGuide('cozy', 'Practice everything you have learned so far.', say('practiceOpen')), modes]
+    : [createGuide('sleepy', 'Finish Day 1 and your practice games will open here 🎯', say('practiceLocked')), modes];
 }
 
 export function createTabs() {

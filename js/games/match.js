@@ -1,7 +1,7 @@
 // The Match pairs game: tap an English word and its Persian meaning.
 
 import { element, link, persian } from '../dom.js';
-import { createGuide } from '../guide.js';
+import { createGuide, say } from '../guide.js';
 import { shuffled } from '../quiz.js';
 import { recordAnswer } from '../state.js';
 
@@ -115,7 +115,9 @@ export function createMatchGame(items, random = Math.random) {
       actions.append(again, link('#/', 'Back to home'));
 
       const missText = misses === 1 ? '1 miss' : `${misses} misses`;
-      const cheer = misses === 0 ? 'Not a single miss! 🙌' : 'You matched them all 💕';
+      const cheer = misses === 0
+        ? say('matchPerfect') ?? 'Not a single miss! 🙌'
+        : say('matchDone') ?? 'You matched them all 💕';
       result.append(
         element('h2', `All matched in ${formatTime(elapsed())} with ${missText} 🎯`),
         createGuide(misses === 0 ? 'cheer' : 'sweet', cheer),
@@ -136,7 +138,7 @@ export function createMatchGame(items, random = Math.random) {
     const exit = link('#/', 'Exit game');
     exit.className = 'exit-link';
     game.replaceChildren(
-      createGuide('cozy', 'Tap a word, then tap its meaning.'),
+      createGuide('cozy', 'Tap a word, then tap its meaning.', say('matchIntro')),
       clock,
       board,
       message,

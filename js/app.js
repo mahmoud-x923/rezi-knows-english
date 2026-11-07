@@ -2,6 +2,7 @@
 
 import { initDebugPanel } from './debug.js';
 import { renderGraduation } from './graduation.js';
+import { prepareGuide } from './guide.js';
 import { createHero } from './hero.js';
 import { renderLesson } from './lesson.js';
 import { renderPractice } from './practice.js';
@@ -93,6 +94,7 @@ window.addEventListener('hashchange', () => {
 });
 
 applyTheme();
+await prepareGuide();
 render();
 initDebugPanel(render);
 
