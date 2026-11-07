@@ -1,8 +1,9 @@
 // Progress in localStorage, plus the unlocking and streak rules.
 
-import { daysBetween, today } from './date.js';
+import { daysBetween, isValidDate, today } from './date.js';
 
 const STORAGE_KEY = 'rezi-knows-english:v1';
+const EXPORT_VERSION = 1;
 
 export const TOTAL_DAYS = 30;
 export const MAX_LESSONS_PER_DAY = 2;
@@ -53,6 +54,80 @@ export function resetProgress() {
   } catch {
     // Storage is unavailable, so there is nothing saved to remove.
   }
+}
+
+export function exportProgress() {
+  return { version: EXPORT_VERSION, ...read() };
+}
+
+function isCount(value) {
+  return Number.isInteger(value) && value >= 0;
+}
+
+function parseCompletedDays(value) {
+  const keys = Object.keys(value);
+  const isInOrder = keys.length <= TOTAL_DAYS
+    && keys.map(Number).sort((a, b) => a - b).every((day, index) => day === index + 1)
+    && keys.every((key) => /^[1-9][0-9]?$/.test(key));
+  if (!isInOrder) return null;
+
+  const days = {};
+  for (const [day, entry] of Object.entries(value)) {
+    if (!isObject(entry) || ![1, 2, 3].includes(entry.stars) || !isValidDate(entry.completedAt)) return null;
+    days[day] = { stars: entry.stars, completedAt: entry.completedAt };
+  }
+  return days;
+}
+
+function parseLessonsByDate(value, completedDays) {
+  const lessons = {};
+  for (const [date, days] of Object.entries(value)) {
+    const isValid = isValidDate(date)
+      && Array.isArray(days)
+      && days.length <= MAX_LESSONS_PER_DAY
+      && days.every((day) => Number.isInteger(day) && completedDays[day]);
+    if (!isValid) return null;
+    lessons[date] = [...days];
+  }
+  return lessons;
+}
+
+function parseItemStats(value) {
+  const stats = {};
+  for (const [id, entry] of Object.entries(value)) {
+    const isValid = isObject(entry) && isCount(entry.seen) && isCount(entry.wrong) && entry.wrong <= entry.seen;
+    if (!isValid) return null;
+    stats[id] = { seen: entry.seen, wrong: entry.wrong };
+  }
+  return stats;
+}
+
+// Returns clean progress from an exported file, or null if anything in it is invalid.
+export function parseProgress(data) {
+  if (!isObject(data) || data.version !== EXPORT_VERSION) return null;
+  const { completedDays, lessonsByDate, streak, itemStats } = data;
+  if (![completedDays, lessonsByDate, streak, itemStats].every(isObject)) return null;
+
+  const days = parseCompletedDays(completedDays);
+  const lessons = days && parseLessonsByDate(lessonsByDate, days);
+  const stats = parseItemStats(itemStats);
+  const isStreakValid = isCount(streak.count) && (streak.lastDate === null || isValidDate(streak.lastDate));
+  if (!days || !lessons || !stats || !isStreakValid) return null;
+
+  return {
+    completedDays: days,
+    lessonsByDate: lessons,
+    streak: { count: streak.count, lastDate: streak.lastDate },
+    itemStats: stats,
+  };
+}
+
+// Replaces the current progress. Returns false, changing nothing, if the data is invalid.
+export function importProgress(data) {
+  const progress = parseProgress(data);
+  if (!progress) return false;
+  write(progress);
+  return true;
 }
 
 function highestCompletedDay(progress) {

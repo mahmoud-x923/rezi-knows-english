@@ -6,6 +6,7 @@ import { createHero } from './hero.js';
 import { renderLesson } from './lesson.js';
 import { renderPractice } from './practice.js';
 import { renderQuiz } from './quiz.js';
+import { createSettings } from './settings.js';
 import { stopSpeaking } from './speech.js';
 import { createTabs } from './tabs.js';
 
@@ -53,7 +54,7 @@ function matchRoute(path) {
 }
 
 async function renderHome() {
-  return [await createHero(), createTabs()];
+  return [await createHero(), createTabs(), createSettings(render)];
 }
 
 function renderPlaceholder(title) {
@@ -92,3 +93,8 @@ window.addEventListener('hashchange', () => {
 
 render();
 initDebugPanel(render);
+
+// Offline support. If registration fails, the site still works online.
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
