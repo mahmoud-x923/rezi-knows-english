@@ -3,7 +3,6 @@
 import { addDays, getDateOverride, isDebugMode, setDateOverride, today } from './date.js';
 import {
   canStartLesson,
-  completeLesson,
   getLessonsLeftToday,
   getNextDay,
   getStreak,
@@ -51,11 +50,6 @@ export function initDebugPanel(onChange) {
   dateInput.type = 'date';
   dateLabel.append(dateInput);
 
-  const completeButton = button('Complete next lesson', () => {
-    completeLesson(getNextDay(), 3);
-    refresh();
-  });
-
   function refresh() {
     const rows = statusRows().flatMap(([term, value]) => {
       const dt = document.createElement('dt');
@@ -66,7 +60,6 @@ export function initDebugPanel(onChange) {
     });
     status.replaceChildren(...rows);
     dateInput.value = today();
-    completeButton.disabled = !canStartLesson();
     onChange();
   }
 
@@ -86,7 +79,6 @@ export function initDebugPanel(onChange) {
       setDateOverride(null);
       refresh();
     }),
-    completeButton,
     button('Reset progress', () => {
       if (!confirm('Reset all progress?')) return;
       resetProgress();
