@@ -98,6 +98,15 @@
     "I'm so proud of you, {{nickname}} 💕",
     "You did it, {{name}}! I knew you would 🙌"
   ],
+  "prizeSong": [
+    "Every answer right! Here's a song for you 🎶",
+    "Perfect, {{nickname}}! This one's for you 🎵",
+    "You earned it, {{nickname}}. Enjoy your song 💕"
+  ],
+  "prizeHint": [
+    "Get every answer right next time and I'll play you a song 🎶",
+    "So close to your prize song, {{nickname}}! Try again? 🎵"
+  ],
   "rude": [
     "Careful with this one! Only with close friends 😤",
     "Don't let me hear you say this at work, {{nickname}} 😤"

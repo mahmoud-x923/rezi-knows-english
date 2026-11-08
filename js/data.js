@@ -27,6 +27,10 @@ export function loadNames() {
   return loadJson('data/names.json');
 }
 
+export function loadSongs() {
+  return loadJson('data/songs.json');
+}
+
 export function loadVerbs() {
   return loadJson('data/verbs.json');
 }

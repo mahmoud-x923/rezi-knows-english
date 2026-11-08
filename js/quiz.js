@@ -1,10 +1,11 @@
 // The quiz engine: question generators, the question flow and the result screen.
 
-import { loadNames, loadQuizContent } from './data.js';
+import { loadNames, loadQuizContent, loadSongs } from './data.js';
 import { buttonLink, element, link, persian } from './dom.js';
 import { createBurst } from './decor.js';
 import { createGuide, say } from './guide.js';
 import { pickNickname } from './names.js';
+import { createPrizeSong, pickSong } from './prize.js';
 import { renderLoadError } from './lesson.js';
 import { play } from './sound.js';
 import { isSpeechAvailable, speak, stopSpeaking } from './speech.js';
@@ -385,7 +386,22 @@ function renderNextStep(isRetake, names) {
   );
 }
 
-function createResult(day, correct, total, isRetake, isSaved, names, onRetake) {
+// Every answer right earns a random prize song. Otherwise Curly reminds her it's there.
+function createSongReward(correct, total, songs) {
+  if (!songs.length) return null;
+  if (correct < total) {
+    const hint = element('p', say('prizeHint') ?? 'Get every answer right next time and I will play you a song 🎶');
+    hint.className = 'prize-hint';
+    return hint;
+  }
+  const videoId = pickSong(songs);
+  if (!videoId) return null;
+  const prize = createPrizeSong(videoId);
+  prize.prepend(createGuide('sweet', say('prizeSong') ?? "Every answer right! Here's a song for you 🎶"));
+  return prize;
+}
+
+function createResult(day, correct, total, isRetake, isSaved, names, songs, onRetake) {
   const stars = getStarsForScore(correct, total);
   const best = getProgress().completedDays[day]?.stars;
   const result = element('div');
@@ -403,6 +419,8 @@ function createResult(day, correct, total, isRetake, isSaved, names, onRetake) {
     earned.append(star);
   }
   result.append(heading, earned, createResultGuide(stars));
+  const reward = createSongReward(correct, total, songs);
+  if (reward) result.append(reward);
 
   if (isRetake && best > stars) result.append(element('p', `Your best for this day: ${'⭐'.repeat(best)}`));
   if (!isSaved) result.append(element('p', "You've reached today's lesson limit, so this result wasn't saved."));
@@ -440,8 +458,13 @@ export async function renderQuiz(dayParam) {
   const title = `Quiz for Day ${day}`;
   let content;
   let names;
+  let songs;
   try {
-    [content, names] = await Promise.all([loadQuizContent(day), loadNames().catch(() => null)]);
+    [content, names, songs] = await Promise.all([
+      loadQuizContent(day),
+      loadNames().catch(() => null),
+      loadSongs().then((list) => (Array.isArray(list) ? list : [])).catch(() => []),
+    ]);
   } catch {
     return renderLoadError(title);
   }
@@ -459,7 +482,7 @@ export async function renderQuiz(dayParam) {
       const streakBefore = getStreak();
       const isSaved = completeLesson(day, stars);
       playResultSounds(stars, getStreak() > streakBefore);
-      const result = createResult(day, correct, questions.length, isRetake, isSaved, names, () => {
+      const result = createResult(day, correct, questions.length, isRetake, isSaved, names, songs, () => {
         start();
         (page.querySelector('[data-autofocus]') ?? page.querySelector('[tabindex="-1"]')).focus();
       });

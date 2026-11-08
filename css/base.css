@@ -1076,6 +1076,47 @@ input[type="text"]:focus {
   justify-content: center;
 }
 
+/* ---------- Prize song ---------- */
+
+.prize-song {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-soft);
+  text-align: start;
+}
+
+.prize-song h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.prize-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: var(--radius-small);
+  background: #000;
+}
+
+.prize-song p {
+  margin: 0.75rem 0 0;
+  color: var(--text-muted);
+}
+
+.prize-hint {
+  margin: 0.5rem 0 1rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-small);
+  background: var(--surface-lavender);
+  color: var(--lavender-text);
+  font-weight: 700;
+}
+
 /* ---------- Match pairs ---------- */
 
 .match-clock {

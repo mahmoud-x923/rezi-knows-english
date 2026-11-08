@@ -42,6 +42,19 @@ The date change only applies while `?debug` is in the address.
 - **Content** lives in `data/`. Lessons follow `data/curriculum.json`, so the order can change without editing the items. All Persian text should be checked by a native speaker.
 - **New files** must be added to the `FILES` list in `sw.js`, or they won't work offline. If you remove a file, also change the `CACHE` name there.
 
+## Prize songs
+
+When Rezi gets every answer in a quiz right, Curly shows a random song from `data/songs.json`. To add one, paste its YouTube link into the list:
+
+```json
+[
+  "https://youtu.be/49tpIMDy9BE",
+  "https://www.youtube.com/watch?v=VIDEO_ID"
+]
+```
+
+Any normal YouTube link works. The video must allow embedding, which most music videos do. Playing a song needs the internet.
+
 ## Progress and backups
 
 Progress is stored only in the browser on each device. Clearing the browser's site data or uninstalling the app deletes it, so export a backup from **⚙️ Settings** now and then.

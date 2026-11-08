@@ -146,7 +146,11 @@ function createEndScreen(day, isReview) {
   } else {
     screen.append(
       element('h2', 'Ready for your quiz?'),
-      createGuide('proud', say('lessonEnd') ?? 'You went through all 5 cards. I know you can do this!'),
+      createGuide(
+        'proud',
+        say('lessonEnd') ?? 'You went through all 5 cards. I know you can do this!',
+        "Get every answer right and I'll play you a surprise song 🎶",
+      ),
       actions(buttonLink(`#/quiz/${day}`, 'Start the quiz', true)),
     );
   }

@@ -23,6 +23,7 @@ const STEPS = [
   { text: 'Play the quiz at the end of each lesson.', fa: 'در پایان هر درس، آزمون را انجام بده.' },
   { text: 'Earn up to 3 stars for each quiz.', fa: 'در هر آزمون تا ۳ ستاره بگیر.' },
   { text: 'Come back every day to keep your streak.', fa: 'هر روز برگرد تا زنجیره‌ات قطع نشود.' },
+  { text: 'Get every answer right and Curly plays you a surprise song 🎶', fa: 'اگر به همهٔ سؤال‌ها درست جواب بدهی، کرلی برایت یک آهنگ پخش می‌کند 🎶' },
 ];
 
 const PRACTICE_MODES = [
